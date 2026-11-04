@@ -1,0 +1,792 @@
+<title>Felt Platform Inventory</title>
+<link rel="stylesheet" href="https://unpkg.com/@patternfly/patternfly@6.7.0/patternfly.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+<script>
+document.documentElement.lang = 'en';
+if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.documentElement.classList.add('pf-v6-theme-dark');
+}
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+  document.documentElement.classList.toggle('pf-v6-theme-dark', e.matches);
+});
+</script>
+
+<style>
+.pf-v6-c-accordion__toggle-text {
+  display: flex;
+  align-items: center;
+  gap: var(--pf-t--global--spacer--sm);
+}
+
+body { margin: 0; font-family: var(--pf-t--global--font--family--body); }
+
+.inventory-search {
+  margin-block-start: var(--pf-t--global--spacer--md);
+  margin-block-end: var(--pf-t--global--spacer--md);
+}
+
+.inv-filter-label { cursor: pointer; }
+.inv-filter-label.selected { outline: 2px solid var(--pf-t--global--text--color--brand--default); outline-offset: 1px; }
+.inv-dot {
+  display: inline-block;
+  width: var(--pf-t--global--spacer--sm);
+  height: var(--pf-t--global--spacer--sm);
+  border-radius: 50%;
+  vertical-align: middle;
+  background: var(--dot-color);
+}
+.inv-dot[data-status="active"]   { --dot-color: #4CB140; }
+.inv-dot[data-status="new"]      { --dot-color: #0066CC; }
+.inv-dot[data-status="experimental"] { --dot-color: #F0AB00; }
+.inv-dot[data-status="needs-decision"] { --dot-color: #EC7A08; }
+.inv-dot[data-status="inactive"] { --dot-color: #8A8D90; }
+.inv-dot[data-status="unknown"]  { --dot-color: #A18FFF; }
+
+
+.pf-v6-c-accordion__item[hidden] { display: none !important; }
+.pf-v6-c-accordion__toggle {
+  font-size: var(--pf-t--global--font--size--heading--sm);
+  font-weight: 700;
+  font-family: var(--pf-t--global--font--family--heading);
+  justify-content: flex-start;
+}
+.pf-v6-c-accordion__toggle-text { flex: none; }
+.area-count {
+  font-size: var(--pf-t--global--font--size--xs);
+  color: var(--pf-t--global--text--color--subtle);
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+}
+.area-desc {
+  font-size: var(--pf-t--global--font--size--sm);
+  color: var(--pf-t--global--text--color--subtle);
+  margin: 0 0 var(--pf-t--global--spacer--sm);
+}
+
+.inv-item .pf-v6-c-card__header { flex-wrap: wrap; gap: var(--pf-t--global--spacer--xs); align-items: center; }
+.inv-item .inv-item-name {
+  font-weight: 600;
+  font-size: var(--pf-t--global--font--size--sm);
+  margin-right: auto;
+}
+.inv-item .inv-item-name a { color: var(--pf-t--global--text--color--regular); text-decoration: none; }
+.inv-item .inv-item-name a:hover { color: var(--pf-t--global--text--color--brand--default); text-decoration: underline; }
+
+.inv-item .inv-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pf-t--global--spacer--xs);
+  margin-top: var(--pf-t--global--spacer--sm);
+}
+.inv-item .inv-relations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pf-t--global--spacer--sm);
+  margin-top: var(--pf-t--global--spacer--sm);
+  font-size: var(--pf-t--global--font--size--xs);
+}
+.inv-item .inv-relations dt {
+  color: var(--pf-t--global--text--color--subtle);
+  font-weight: 600;
+  display: inline;
+}
+.inv-item .inv-relations dd { display: inline; margin: 0; color: var(--pf-t--global--text--color--subtle); }
+.inv-rel-group { display: flex; align-items: baseline; gap: var(--pf-t--global--spacer--xs); }
+
+.inv-item .inv-notes {
+  font-size: var(--pf-t--global--font--size--xs);
+  color: var(--pf-t--global--text--color--subtle);
+  margin: var(--pf-t--global--spacer--sm) 0 0;
+  padding-top: var(--pf-t--global--spacer--sm);
+  border-top: 1px solid var(--pf-t--global--border--color--default);
+  font-style: italic;
+}
+
+.inv-item[hidden] { display: none !important; }
+
+#questions-callout { margin-bottom: var(--pf-t--global--spacer--md); }
+#questions-callout h4 { margin: 0; }
+#questions-list { margin: var(--pf-t--global--spacer--sm) 0 0; padding-left: var(--pf-t--global--spacer--lg); }
+
+.tt-contacts { margin-top: var(--pf-t--global--spacer--xs); }
+
+.accordion-chevron { width: 1em; height: 1em; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; margin-top: var(--pf-t--global--spacer--md); }
+
+.no-results {
+  text-align: center;
+  padding: var(--pf-t--global--spacer--xl) var(--pf-t--global--spacer--md);
+  color: var(--pf-t--global--text--color--subtle);
+}
+
+/* Architecture graph */
+.graph-container {
+  position: relative;
+  width: 100%;
+  min-height: 500px;
+  background: var(--pf-t--global--background--color--primary--default);
+  overflow: hidden;
+}
+.graph-container svg { width: 100%; height: 100%; }
+
+.graph-toolbar {
+  margin-top: var(--pf-t--global--spacer--md);
+  margin-bottom: var(--pf-t--global--spacer--md);
+}
+
+.graph-link {
+  stroke: var(--pf-t--global--border--color--default);
+  stroke-width: 1.5;
+  fill: none;
+  opacity: 0.6;
+}
+.graph-link:hover { stroke-width: 2.5; opacity: 1; }
+.graph-link.highlighted { stroke-width: 2.5; opacity: 1; }
+
+.graph-node rect {
+  cursor: grab;
+  transition: filter 0.1s;
+}
+.graph-node rect:hover { filter: brightness(1.1); }
+.graph-node text {
+  font-size: var(--pf-t--global--font--size--xs);
+  fill: var(--pf-t--global--text--color--regular);
+  pointer-events: none;
+  font-family: var(--pf-t--global--font--family--body);
+}
+.graph-node.external rect {
+  stroke-dasharray: 4 2;
+}
+.graph-node.external text {
+  fill: var(--pf-t--global--text--color--subtle);
+  font-style: italic;
+}
+
+.graph-band {
+  fill: var(--pf-t--global--background--color--secondary--default);
+}
+.graph-band-label {
+  font-size: var(--pf-t--global--font--size--xs);
+  fill: var(--pf-t--global--text--color--subtle);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-family: var(--pf-t--global--font--family--body);
+}
+
+.graph-tooltip {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  padding: var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--sm);
+  background: var(--pf-t--global--background--color--floating--default);
+  border: 1px solid var(--pf-t--global--border--color--default);
+  border-radius: var(--pf-t--global--border--radius--medium);
+  font-size: var(--pf-t--global--font--size--xs);
+  max-width: 300px;
+  pointer-events: none;
+  color: var(--pf-t--global--text--color--regular);
+  box-shadow: var(--pf-t--global--box-shadow--md);
+  line-height: 1.5;
+}
+.graph-tooltip strong { display: block; margin-bottom: var(--pf-t--global--spacer--xs); font-size: var(--pf-t--global--font--size--sm); }
+.graph-tooltip .tt-status { font-size: var(--pf-t--global--font--size--xs); margin-top: var(--pf-t--global--spacer--xs); }
+
+.graph-legend-swatch {
+  display: inline-block;
+  width: var(--pf-t--global--spacer--sm);
+  height: var(--pf-t--global--spacer--sm);
+  border-radius: var(--pf-t--global--border--radius--tiny);
+  vertical-align: middle;
+  margin-inline-end: var(--pf-t--global--spacer--xs);
+  background: var(--swatch-color);
+}
+
+.masthead-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pf-t--global--spacer--md);
+  flex-wrap: wrap;
+}
+.masthead-inner h1 { font-size: var(--pf-t--global--font--size--heading--sm); font-weight: 700; margin: 0; }
+.masthead-inner .updated {
+  font-size: var(--pf-t--global--font--size--xs);
+  color: var(--pf-t--global--text--color--subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 600px) {
+  .masthead-inner { padding: var(--pf-t--global--spacer--sm) var(--pf-t--global--spacer--md); }
+  .masthead-inner h1 { font-size: var(--pf-t--global--font--size--heading--xs); }
+}
+</style>
+
+<div class="pf-v6-c-page pf-m-plain">
+  <div class="pf-v6-c-skip-to-content">
+    <a class="pf-v6-c-button pf-m-primary" href="#main-content-page-demo-plain">
+      <span class="pf-v6-c-button__text">Skip to content</span>
+    </a>
+  </div>
+  <header class="pf-v6-c-masthead" id="page-demo-basic-docked">
+    <div class="pf-v6-c-masthead__main">
+      <div class="masthead-inner">
+        <h1>Felt Platform Inventory</h1>
+        <span class="updated">Updated Nov 3, 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="pf-v6-c-page__main-container" tabindex="-1">
+    <main
+      class="pf-v6-c-page__main"
+      tabindex="-1"
+      id="main-content-page-demo-basic"
+    >
+      <section class="pf-v6-c-page__main-section pf-m-plain pf-m-no-padding">
+        <div class="pf-v6-c-page__main-body">
+          <div class="pf-v6-c-tabs" id="main-tabs">
+            <ul class="pf-v6-c-tabs__list" role="tablist">
+              <li class="pf-v6-c-tabs__item pf-m-current" role="presentation">
+                <button class="pf-v6-c-tabs__link" role="tab" aria-selected="true" data-tab="inventory" type="button">
+                  <span class="pf-v6-c-tabs__item-text">Inventory</span>
+                </button>
+              </li>
+              <li class="pf-v6-c-tabs__item" role="presentation">
+                <button class="pf-v6-c-tabs__link" role="tab" aria-selected="false" data-tab="architecture" type="button">
+                  <span class="pf-v6-c-tabs__item-text">Architecture</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="tab-panel active" id="panel-inventory">
+            <div class="pf-v6-c-alert pf-m-warning" id="questions-callout">
+              <div class="pf-v6-c-alert__title"><h4>Open Questions</h4></div>
+              <div class="pf-v6-c-alert__description"><ul id="questions-list"></ul></div>
+            </div>
+            <div class="pf-v6-c-text-input-group inventory-search">
+              <div class="pf-v6-c-text-input-group__main">
+                <span class="pf-v6-c-text-input-group__text">
+                  <input
+                    class="pf-v6-c-text-input-group__text-input"
+                    type="text"
+                    value
+                    aria-label="Basic"
+                    placeholder="Search repos, tools, people…"
+                    aria-label="Search inventory" id="search"
+                  />
+                </span>
+              </div>
+            </div>
+            <div class="pf-v6-c-toolbar" id="stats-toolbar">
+              <div class="pf-v6-c-toolbar__content">
+                <div class="pf-v6-c-toolbar__content-section">
+                  <div class="pf-v6-c-toolbar__group pf-m-filter-group" id="stats" role="group" aria-label="Filter by status"></div>
+                </div>
+              </div>
+            </div>
+            <div id="inventory"></div>
+            <div class="no-results" id="no-results" hidden>No items match your search.</div>
+          </div>
+
+          <div class="tab-panel" id="panel-architecture">
+            <div class="pf-v6-l-flex">
+              <div class="pf-v6-l-flex__item">
+                <p>Drag nodes to rearrange &middot; Scroll to zoom &middot; Click to highlight</p>
+            </div>
+              <div class="pf-v6-l-flex__item">
+                <button class="pf-v6-c-button pf-m-secondary pf-m-small " type="button" id="graph-reset">Reset view</button>
+              </div>
+              <div class="pf-v6-l-flex__item">
+                <div class="pf-v6-c-toolbar graph-toolbar">
+                  <div class="pf-v6-c-toolbar__content">
+                    <div class="pf-v6-c-toolbar__content-section">
+                      <div class="pf-v6-c-toolbar__group pf-m-align-end pf-m-align-items-center">
+                        <div class="pf-v6-c-toolbar__item"><strong>Legend</strong></div>
+                        <div class="pf-v6-c-toolbar__item" id="graph-legend"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="graph-container" id="graph-container">
+              <svg id="graph-svg"></svg>
+            </div>
+          </div>
+
+          <div class="graph-tooltip" id="graph-tooltip"></div>
+
+          <div class="no-results" id="loading-msg">Loading inventory data&hellip;</div>
+          <div class="no-results" id="load-error" hidden></div>
+       </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+let DATA = null;
+
+const STATUS = {
+  'active':         { label: 'Active',        pf: 'green' },
+  'new':            { label: 'New',            pf: 'blue' },
+  'experimental':   { label: 'Experimental',   pf: 'orange' },
+  'needs-decision': { label: 'Needs Decision', pf: 'orangered' },
+  'inactive':       { label: 'Inactive',       pf: 'gray' },
+  'unknown':        { label: 'Unknown',        pf: 'purple' }
+};
+
+const AREA_COLORS = {
+  'rhds-core': '#0066CC',
+  'rhds-infra': '#8481DD',
+  'upstream': '#009596',
+  'experimental': '#F4C145',
+  'inactive': '#8A8D90',
+  'to-investigate': '#A18FFF',
+  'pf-core': '#004080',
+  'pf-react': '#3E8635',
+  'pf-extensions': '#C9190B',
+  'pf-tooling': '#005F60'
+};
+const AREA_PALETTE = ['#0066CC','#8481DD','#009596','#F4C145','#3E8635','#C9190B','#005F60','#EC7A08','#A18FFF','#8A8D90',];
+
+let activeStatusFilter = null;
+let searchQuery = '';
+
+function allItems() { return DATA ? DATA.areas.flatMap(a => a.items) : []; }
+
+function pfLabel(text, color, outline) {
+  return `<span class="pf-v6-c-label pf-m-${color} pf-m-compact${outline ? ' pf-m-outline' : ''}"><span class="pf-v6-c-label__content"><span class="pf-v6-c-label__text">${text}</span></span></span>`;
+}
+
+
+function renderStats() {
+  const counts = {};
+  for (const s of Object.keys(STATUS)) counts[s] = 0;
+  for (const item of allItems()) counts[item.status] = (counts[item.status] || 0) + 1;
+  const total = allItems().length;
+  const el = document.getElementById('stats');
+
+  function filterLabel(text, status, isSelected) {
+    const sel = isSelected ? ' selected' : '';
+    return `<div class="pf-v6-c-toolbar__item">
+      <span class="pf-v6-c-label pf-m-compact pf-m-outline inv-filter-label${sel}" data-status="${status}" role="button" tabindex="0">
+        <span class="pf-v6-c-label__content"><span class="pf-v6-c-label__text">${text}</span></span>
+      </span>
+    </div>`;
+  }
+
+  let html = filterLabel(`See all ${total} total`, 'all', !activeStatusFilter);
+  for (const [status, meta] of Object.entries(STATUS)) {
+    if (!counts[status]) continue;
+    html += filterLabel(`<span class="inv-dot" data-status="${status}"></span> ${counts[status]} ${meta.label}`, status, activeStatusFilter === status);
+  }
+  el.innerHTML = html;
+  el.querySelectorAll('.inv-filter-label').forEach(lbl => {
+    lbl.addEventListener('click', () => {
+      const s = lbl.dataset.status;
+      activeStatusFilter = s === 'all' ? null : (activeStatusFilter === s ? null : s);
+      renderStats();
+      applyFilters();
+    });
+    lbl.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); lbl.click(); }
+    });
+  });
+}
+
+function renderQuestions() {
+  document.getElementById('questions-list').innerHTML = DATA.openQuestions.map(q =>
+    `<li><strong>${q.question}:</strong> ${q.context}</li>`
+  ).join('');
+}
+
+function renderCard(item) {
+  const sm = STATUS[item.status] || STATUS.unknown;
+  const searchText = [item.name, item.description, item.notes || '', item.org, item.platform, ...(item.contacts || []), ...(item.tags || [])].join(' ').toLowerCase();
+  let html = `<article class="inv-item pf-v6-c-card pf-m-compact" data-status="${item.status}" data-search="${searchText}">
+    <div class="pf-v6-c-card__header">
+      <span class="inv-item-name">${item.url ? `<a href="${item.url}" target="_blank" rel="noopener">${item.name}</a>` : item.name}</span>
+      ${pfLabel(sm.label, sm.pf)}
+    </div>
+    <div class="pf-v6-c-card__body">
+      <p>${item.description}</p>`;
+  html += '<div class="inv-meta">';
+  html += pfLabel(item.platform + (item.org ? ' / ' + item.org : ''), 'gray', true);
+  if (item.contacts && item.contacts.length) html += item.contacts.map(c => pfLabel(c, 'cyan', false)).join('');
+  if (item.tags && item.tags.length) html += item.tags.map(t => pfLabel(t, 'gray', true)).join('');
+  html += '</div>';
+  const hasRel = (item.dependsOn && item.dependsOn.length) || (item.consumers && item.consumers.length);
+  if (hasRel) {
+    html += '<div class="inv-relations">';
+    if (item.dependsOn && item.dependsOn.length) html += `<div class="inv-rel-group"><dt>Depends on:</dt> <dd>${item.dependsOn.join(', ')}</dd></div>`;
+    if (item.consumers && item.consumers.length) html += `<div class="inv-rel-group"><dt>Used by:</dt> <dd>${item.consumers.join(', ')}</dd></div>`;
+    html += '</div>';
+  }
+  if (item.notes) html += `<div class="inv-notes">${item.notes}</div>`;
+  html += '</div></article>';
+  return html;
+}
+
+function renderInventory() {
+  const main = document.getElementById('inventory');
+  const chevron = '<svg class="accordion-chevron" viewBox="0 0 320 512" fill="currentColor"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>';
+  let html = '<div class="pf-v6-c-accordion pf-m-plain">';
+  for (const area of DATA.areas) {
+    const contentId = 'area-content-' + area.id;
+    html += `<div class="pf-v6-c-accordion__item pf-m-expanded" data-area="${area.id}">
+      <button class="pf-v6-c-accordion__toggle" type="button" aria-expanded="true" aria-controls="${contentId}">
+        <span class="pf-v6-c-accordion__toggle-text">
+          ${area.name} <span class="area-count" data-area-count="${area.id}">(${area.items.length})</span>
+        </span>
+        <span class="pf-v6-c-accordion__toggle-icon">${chevron}</span>
+      </button>
+      <div class="pf-v6-c-accordion__expandable-content" id="${contentId}">
+        <div class="pf-v6-c-accordion__expandable-content-body">
+          <p class="area-desc">${area.description}</p>
+          <div class="pf-v6-l-gallery pf-m-gutter">
+            ${area.items.map(renderCard).join('')}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+  html += '</div>';
+  main.innerHTML = html;
+
+  main.querySelectorAll('.pf-v6-c-accordion__toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.pf-v6-c-accordion__item');
+      const expanded = item.classList.toggle('pf-m-expanded');
+      btn.setAttribute('aria-expanded', String(expanded));
+    });
+  });
+}
+
+function applyFilters() {
+  const items = document.querySelectorAll('.inv-item');
+  const sections = document.querySelectorAll('.pf-v6-c-accordion__item');
+  let visible = 0;
+  items.forEach(el => {
+    const ok = (!activeStatusFilter || el.dataset.status === activeStatusFilter) && (!searchQuery || el.dataset.search.includes(searchQuery));
+    el.hidden = !ok;
+    if (ok) visible++;
+  });
+  sections.forEach(sec => {
+    const id = sec.dataset.area;
+    const vis = sec.querySelectorAll('.inv-item:not([hidden])');
+    sec.hidden = vis.length === 0;
+    const c = sec.querySelector(`[data-area-count="${id}"]`);
+    if (c) c.textContent = `(${vis.length})`;
+  });
+  document.getElementById('no-results').hidden = visible > 0;
+}
+
+document.getElementById('search').addEventListener('input', e => {
+  searchQuery = e.target.value.toLowerCase().trim();
+  applyFilters();
+});
+
+// === Tabs ===
+document.querySelectorAll('.pf-v6-c-tabs__link').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.pf-v6-c-tabs__item').forEach(t => t.classList.remove('pf-m-current'));
+    document.querySelectorAll('.pf-v6-c-tabs__link').forEach(t => t.setAttribute('aria-selected', 'false'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    tab.closest('.pf-v6-c-tabs__item').classList.add('pf-m-current');
+    tab.setAttribute('aria-selected', 'true');
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    if (tab.dataset.tab === 'architecture' && !graphRendered) initGraph();
+  });
+});
+
+// === Architecture Graph ===
+let graphRendered = false;
+
+function buildGraphData() {
+  const nodes = [];
+  const links = [];
+  const nodeMap = {};
+
+  DATA.areas.forEach(area => {
+    area.items.forEach(item => {
+      const n = { id: item.name, ...item, area: area.id, areaName: area.name, _halfW: Math.max(50, item.name.length * 3.8 + 14) };
+      nodes.push(n);
+      nodeMap[item.name] = n;
+    });
+  });
+
+  DATA.areas.forEach(area => {
+    area.items.forEach(item => {
+      (item.dependsOn || []).forEach(dep => {
+        if (nodeMap[dep]) links.push({ source: dep, target: item.name, type: 'provides' });
+      });
+      (item.consumers || []).forEach(con => {
+        if (nodeMap[con]) {
+          links.push({ source: item.name, target: con, type: 'provides' });
+        } else {
+          links.push({ source: item.name, target: con, type: 'provides' });
+        }
+      });
+    });
+  });
+
+  return { nodes, links };
+}
+
+function initGraph() {
+  graphRendered = true;
+  const container = document.getElementById('graph-container');
+  const width = container.clientWidth;
+  const svg = d3.select('#graph-svg');
+  svg.selectAll('*').remove();
+
+  const { nodes, links } = buildGraphData();
+
+  const AREA_ORDER = [...DATA.areas.map(a => a.id)];
+  const AREA_LABELS = { };
+  DATA.areas.forEach((a, i) => {
+    AREA_LABELS[a.id] = a.name;
+    if (!AREA_COLORS[a.id]) AREA_COLORS[a.id] = AREA_PALETTE[i % AREA_PALETTE.length];
+  });
+
+  const groups = {};
+  nodes.forEach(n => {
+    if (!groups[n.area]) groups[n.area] = [];
+    groups[n.area].push(n);
+  });
+  const activeAreas = AREA_ORDER.filter(a => groups[a] && groups[a].length > 0);
+
+  const pad = 40;
+  const bandPad = 16;
+  const labelH = 22;
+  const nodeH = 30;
+  const nodeGap = 14;
+  const bandGap = 12;
+  const nodeW = 180;
+  const maxPerRow = Math.max(2, Math.floor((width - pad * 2 - bandPad * 2) / (nodeW + nodeGap)));
+
+  let curY = pad;
+  const bandData = [];
+
+  activeAreas.forEach(areaId => {
+    const areaNodes = groups[areaId];
+    const rows = Math.ceil(areaNodes.length / maxPerRow);
+    const contentH = rows * nodeH + (rows - 1) * nodeGap;
+    const bandH = contentH + bandPad * 2 + labelH;
+
+    areaNodes.forEach((n, i) => {
+      const row = Math.floor(i / maxPerRow);
+      const col = i % maxPerRow;
+      const nodesInRow = Math.min(maxPerRow, areaNodes.length - row * maxPerRow);
+      const totalRowW = nodesInRow * nodeW + (nodesInRow - 1) * nodeGap;
+      const startX = (width - totalRowW) / 2;
+      n.x = startX + col * (nodeW + nodeGap) + nodeW / 2;
+      n.y = curY + labelH + bandPad + row * (nodeH + nodeGap) + nodeH / 2;
+      n._halfW = nodeW / 2;
+      n._halfH = nodeH / 2;
+    });
+
+    bandData.push({ areaId, label: AREA_LABELS[areaId], y: curY, height: bandH, color: AREA_COLORS[areaId] });
+    curY += bandH + bandGap;
+  });
+
+  const totalH = curY + pad;
+  svg.attr('viewBox', `0 0 ${width} ${totalH}`);
+  container.style.height = Math.max(500, totalH + 20) + 'px';
+
+  svg.append('defs').append('marker')
+    .attr('id', 'arrowhead')
+    .attr('viewBox', '0 -4 8 8')
+    .attr('refX', 7).attr('refY', 0)
+    .attr('markerWidth', 7).attr('markerHeight', 7)
+    .attr('orient', 'auto')
+    .append('path')
+    .attr('d', 'M0,-3.5L8,0L0,3.5Z')
+    .attr('fill', '#8A8D90');
+
+  const g = svg.append('g');
+  const zoom = d3.zoom().scaleExtent([0.3, 3]).on('zoom', e => g.attr('transform', e.transform));
+  svg.call(zoom);
+
+  document.getElementById('graph-reset').onclick = () => {
+    svg.transition().duration(400).call(zoom.transform, d3.zoomIdentity);
+  };
+
+  g.selectAll('.graph-band')
+    .data(bandData)
+    .join('rect')
+    .attr('class', 'graph-band')
+    .attr('x', 0).attr('width', width)
+    .attr('y', d => d.y)
+    .attr('height', d => d.height)
+    .attr('rx', 6)
+    .attr('fill', d => d.color)
+    .attr('fill-opacity', 0.06)
+    .attr('stroke', d => d.color)
+    .attr('stroke-opacity', 0.15)
+    .attr('stroke-width', 1);
+
+  g.selectAll('.graph-band-label')
+    .data(bandData)
+    .join('text')
+    .attr('class', 'graph-band-label')
+    .attr('x', pad)
+    .attr('y', d => d.y + 15)
+    .text(d => d.label);
+
+  // Resolve string IDs to node objects and deduplicate
+  const nodeById = {};
+  nodes.forEach(n => nodeById[n.id] = n);
+  const seen = new Set();
+  const resolvedLinks = links.filter(l => {
+    if (typeof l.source === 'string') l.source = nodeById[l.source];
+    if (typeof l.target === 'string') l.target = nodeById[l.target];
+    if (!l.source || !l.target) return false;
+    const key = l.source.id + '→' + l.target.id;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  function linkPath(d) {
+    const sx = d.source.x, sy = d.source.y;
+    const tx = d.target.x, ty = d.target.y;
+    const sH = d.source._halfH, tH = d.target._halfH;
+    const sW = d.source._halfW, tW = d.target._halfW;
+
+    if (Math.abs(sy - ty) < nodeH) {
+      const dx = tx - sx;
+      const arcH = 28 + Math.abs(dx) * 0.12;
+      const ex = sx + (dx > 0 ? sW : -sW);
+      const nx = tx + (dx > 0 ? -tW : tW);
+      return `M${ex},${sy} C${ex},${sy + arcH} ${nx},${ty + arcH} ${nx},${ty}`;
+    }
+    if (sy < ty) {
+      const s = sy + sH, e = ty - tH, m = (s + e) / 2;
+      return `M${sx},${s} C${sx},${m} ${tx},${m} ${tx},${e}`;
+    }
+    const s = sy - sH, e = ty + tH, m = (s + e) / 2;
+    return `M${sx},${s} C${sx},${m} ${tx},${m} ${tx},${e}`;
+  }
+
+  const linkSel = g.selectAll('.graph-link')
+    .data(resolvedLinks)
+    .join('path')
+    .attr('class', 'graph-link')
+    .attr('d', linkPath)
+    .attr('marker-end', 'url(#arrowhead)');
+
+  const nodeSel = g.selectAll('.graph-node')
+    .data(nodes)
+    .join('g')
+    .attr('class', d => `graph-node${d.area === 'external' ? ' external' : ''}`)
+    .attr('transform', d => `translate(${d.x},${d.y})`)
+    .call(d3.drag()
+      .on('drag', function(e, d) {
+        d.x = e.x; d.y = e.y;
+        d3.select(this).attr('transform', `translate(${d.x},${d.y})`);
+        linkSel.attr('d', linkPath);
+      })
+    );
+
+  nodeSel.append('rect')
+    .attr('rx', 6).attr('ry', 6)
+    .attr('width', nodeW).attr('height', nodeH)
+    .attr('x', -nodeW / 2).attr('y', -nodeH / 2)
+    .attr('fill', d => AREA_COLORS[d.area] || '#BCC3C9')
+    .attr('fill-opacity', d => d.area === 'external' ? 0.12 : 0.18)
+    .attr('stroke', d => AREA_COLORS[d.area] || '#BCC3C9')
+    .attr('stroke-width', 1.5);
+
+  nodeSel.append('text')
+    .text(d => d.name.length > 24 ? d.name.slice(0, 22) + '…' : d.name)
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'central')
+    .attr('font-size', '11px');
+
+  const tooltip = document.getElementById('graph-tooltip');
+
+  nodeSel.on('mouseover', (event, d) => {
+    const sm = STATUS[d.status];
+    tooltip.style.display = 'block';
+    tooltip.innerHTML = `<strong>${d.name}</strong>${d.description ? '<br>' + d.description : ''}${sm ? `<div class="tt-status">${pfLabel(sm.label, sm.pf)}</div>` : ''}${d.contacts && d.contacts.length ? `<div class="tt-status tt-contacts">${d.contacts.join(', ')}</div>` : ''}`;
+  }).on('mousemove', (event) => {
+    tooltip.style.left = (event.clientX + 12) + 'px';
+    tooltip.style.top = (event.clientY - 12) + 'px';
+  }).on('mouseout', () => {
+    tooltip.style.display = 'none';
+  });
+
+  nodeSel.on('click', (event, d) => {
+    nodeSel.selectAll('rect').attr('stroke-width', 1.5);
+    linkSel.classed('highlighted', false).attr('stroke', null);
+
+    const connected = new Set();
+    resolvedLinks.forEach((l, i) => {
+      if (l.source.id === d.id || l.target.id === d.id) {
+        connected.add(l.source.id);
+        connected.add(l.target.id);
+        d3.select(linkSel.nodes()[i]).classed('highlighted', true).attr('stroke', AREA_COLORS[d.area] || '#0066CC');
+      }
+    });
+    nodeSel.each(function(n) {
+      if (connected.has(n.id)) d3.select(this).select('rect').attr('stroke-width', 2.5);
+    });
+  });
+
+  const legend = document.getElementById('graph-legend');
+  const legendItems = activeAreas.filter(a => a !== 'to-investigate').map(a => ({ label: AREA_LABELS[a], color: AREA_COLORS[a] }));
+  legend.innerHTML = '<div class="pf-v6-c-label-group"><div class="pf-v6-c-label-group__main"><ul class="pf-v6-c-label-group__list">'
+    + legendItems.map(l =>
+      `<li class="pf-v6-c-label-group__list-item"><span class="pf-v6-c-label pf-m-compact pf-m-outline"><span class="pf-v6-c-label__content"><span class="pf-v6-c-label__icon"><span class="graph-legend-swatch" data-color="${l.color}"></span></span><span class="pf-v6-c-label__text">${l.label}</span></span></span></li>`
+    ).join('')
+    + `<li class="pf-v6-c-label-group__list-item"><span class="pf-v6-c-label pf-m-compact pf-m-outline"><span class="pf-v6-c-label__content"><span class="pf-v6-c-label__text">→ provides to</span></span></span></li>`
+    + '</ul></div></div>';
+  legend.querySelectorAll('.graph-legend-swatch[data-color]').forEach(el => {
+    el.style.setProperty('--swatch-color', el.dataset.color);
+  });
+}
+
+function normalizeItem(item) {
+  return {
+    name: item.name || '',
+    url: item.url || '',
+    platform: item.platform || 'Unknown',
+    org: item.org || '',
+    status: item.status || 'unknown',
+    description: item.description || '',
+    contacts: item.contacts || [],
+    dependsOn: item.dependsOn || [],
+    consumers: item.consumers || [],
+    tags: item.tags || [],
+    notes: item.notes || ''
+  };
+}
+
+function boot(data) {
+  DATA = data;
+  DATA.areas.forEach(a => { a.items = a.items.map(normalizeItem); });
+  document.getElementById('loading-msg').hidden = true;
+  document.querySelector('.updated').textContent = 'Updated ' + (DATA.meta.lastUpdated || '');
+  renderStats();
+  renderQuestions();
+  renderInventory();
+}
+
+fetch('felt-platform-inventory.yaml')
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+  .then(text => boot(jsyaml.load(text)))
+  .catch(err => {
+    const el = document.getElementById('load-error');
+    el.hidden = false;
+    el.innerHTML = '<strong>Could not load felt-platform-inventory.yaml</strong><br>Serve both files from a local server:<br><code>npx serve</code>';
+    document.getElementById('loading-msg').hidden = true;
+    console.error('Failed to load YAML:', err);
+  });
+</script>

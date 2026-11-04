@@ -1,0 +1,562 @@
+# felt-platform-inventory.yaml
+# Source of truth for codebases, tools, and infrastructure
+# owned by the Felt Platform team.
+#
+# Update this file and regenerate the dashboard.
+
+meta:
+  title: Felt Platform Inventory
+  lastUpdated: "2026-11-04"
+  description: Map of codebases, tools, and infrastructure owned by the Felt Platform team
+
+openQuestions:
+  - question: CDN ownership going forward
+    context: Luke Dary is current CMDB contact. Who manages it after the org change? It automatically grabs files, but publishing requires a human to push the button.
+    mentioned: [Luke Dary]
+
+  - question: Deno runtime replacement
+    context: CDN runs on Deno, which was announced to stop development. Luke evaluating alternatives.
+    mentioned: [Luke Dary]
+
+  - question: Steven's static site generator evaluation
+    context: Built for Steven's website. Worth evaluating for team use if time permits.
+    mentioned: [Steven]
+
+  - question: lit-ssr-wasm and golit adoption
+    context: Benny offered it to Drupal team, got wishy-washy reception. Path forward?
+    mentioned: [Benny]
+
+  - question: What do we want to with inactive/archived projects?
+    context: Some are not archived in GitHub yet - do we want to keep in org for historical purposes?
+
+areas:
+  - id: rhds-core
+    name: RHDS Core
+    description: Core design system libraries and web component packages
+    items:
+      - name: red-hat-design-system
+        npm-name: "@rhds/elements"
+        url: https://github.com/RedHat-UX/red-hat-design-system
+        npm-url: https://www.npmjs.com/package/@rhds/elements
+        docs: https://ux.redhat.com/
+        platform: GitHub
+        org: RedHat-UX
+        status: active
+        description: Web component implementation of the Red Hat Design System
+        contacts: [RHDS team]
+        dependsOn: ["@patternfly/pfe-core", red-hat-icons, red-hat-design-tokens, "@patternfly/create-element", patternfly-elements, "@patternfly/eslint-config-elements", "@patternfly/eslint-plugin-elements", "@patternfly/icons", "@patternfly/pfe-tools", cem]
+
+      - name: red-hat-design-tokens
+        npm-name: "@rhds/tokens"
+        url: https://github.com/RedHat-UX/red-hat-design-tokens
+        npm-url: https://www.npmjs.com/package/@rhds/tokens
+        docs: https://red-hat-design-tokens.netlify.app/
+        platform: GitHub
+        org: RedHat-UX
+        status: active
+        description: Design tokens for Red Hat digital properties
+        contacts: [RHDS team]
+        dependsOn: ["@patternfly/eslint-config-elements", rhds-core, red-hat-icons]
+        consumers: [red-hat-design-system]
+
+      - name: red-hat-icons
+        npm-name: "@rhds/icons"
+        url: https://github.com/RedHat-UX/red-hat-icons
+        npm-url: https://www.npmjs.com/package/@rhds/icons
+        docs: https://red-hat-icons.netlify.app/
+        platform: GitHub
+        org: RedHat-UX
+        status: active
+        description: Icon library for Red Hat products
+        contacts: [RHDS team]
+        consumers: [patternfly-elements, red-hat-design-system]
+        notes: patternfly-elements relies on this library
+
+      - name: patternfly-elements
+        npm-name: "@patternfly/elements"
+        url: https://github.com/patternfly/patternfly-elements
+        npm-url: https://www.npmjs.com/package/@patternfly/elements
+        docs: https://patternflyelements.org/
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: PatternFly web components
+        contacts: [RHDS team]
+        dependsOn: ["@patternfly/patternfly", cem, mappa, red-hat-design-system]
+
+      - name: red-hat-design-skills
+        url: https://github.com/RedHat-UX/red-hat-design-skills
+        platform: GitHub
+        org: RedHat-UX
+        status: new
+        description: AI skills for the design system
+        contacts: [Benny]
+        notes: Placeholder — no skills added yet. No time before org change.
+
+      - name: mcp
+        url: https://github.com/RedHat-UX/mcp
+        platform: GitHub
+        org: RedHat-UX
+        status: new
+        description: MCP server for Red Hat Design System
+        contacts: [Benny]
+        notes: Recently added by Benny.
+
+      - name: pf-usage-audit
+        url: https://github.com/RedHat-UX/pf-usage-audit
+        platform: GitHub
+        org: RedHat-UX
+        status: active
+        description: "Audit PatternFly React component usage across the PF ecosystem: consoledot, Cockpit, OpenShift console, Ansible UI, Konveyor, Kiali, Keycloak, and more."
+        contacts: [Benny]
+
+      - name: red-hat-extensions
+        url: https://github.com/RedHat-UX/red-hat-extensions
+        docs: https://rhds-extensions.netlify.app/
+        platform: GitHub
+        org: RedHat-UX
+        status: active
+        description: Experimental extension elements based off of Red Hat Design System principles and tooling.
+        dependsOn: ["@patternfly/pfe-core", red-hat-design-system, red-hat-design-tokens, red-hat-icons, "@patternfly/create-element", patternfly-elements, "@patternfly/eslint-config-elements", "@patternfly/eslint-plugin-elements", "@patternfly/icons", "@patternfly/pfe-tools"]
+
+      - name: red-hat-brand
+        url: https://github.com/RedHat-UX/red-hat-brand
+        docs: https://prismatic-souffle-43beb6.netlify.app/
+        platform: GitHub
+        org: RedHat-UX
+        status: active
+        description: Red Hat's Brand site, brand.redhat.com.
+        dependsOn: [patternfly-elements, red-hat-design-system]
+
+  - id: rhds-infra
+    name: Infrastructure
+    description: CDN and content serving infrastructure. <a href="https://www.redhatstatic.com/dssf-001/">See all items at redhatstatic.com</a>.
+    items:
+      - name: CDN Files
+        url: https://gitlab.cee.redhat.com/rhds/cdn_files/
+        platform: GitLab
+        org: rhds
+        status: needs-decision
+        description: Automated processing and file storage for CDN packages
+        contacts: [Luke Dary]
+        notes: >
+          Auto-grabs files; publishing requires human button push.
+          Luke is CMDB contact, checks flows most days.
+
+      - name: CDN Serve
+        url: https://gitlab.cee.redhat.com/rhds/cdn
+        platform: GitLab
+        org: rhds
+        status: needs-decision
+        description: Runtime server
+        contacts: [Luke Dary]
+        dependsOn: [CDN Files]
+        consumers:
+          - access.redhat.com
+          - docs.redhat.com
+          - "redhat.com (build-time)"
+          - cloud.redhat.com/experts
+        notes: >
+          Built on Lightrail (formerly SSR platform). Runs Deno — looking for
+          alternatives since Deno stopping development. Kyle Buchanan's teams
+          use CDN as preferred distribution. Zack Hawkins bundles separately.
+          Splunk analytics available on consumers (Mark and Arathy can query).
+
+  - id: upstream
+    name: Upstream Dependencies
+    description: Open-source tooling maintained by team members that RHDS depends on
+    items:
+      - name: cem
+        npm-name: "@pwrs/cem"
+        url: https://github.com/bennypowers/cem
+        npm-url: https://www.npmjs.com/package/@pwrs/cem
+        docs: https://bennypowers.dev/cem/
+        platform: GitHub
+        org: bennypowers
+        status: active
+        description: Custom Elements Manifest tooling
+        contacts: [Benny]
+        tags: [dependency, personal]
+        consumers: [red-hat-design-system, patternfly-elements]
+        notes: RHDS dev server transitioning to this. It is a command-line tool for generating and querying Custom Elements Manifest files. It can analyze your codebase and generate rich metadata for your custom elements, facilitating documentation, tooling, and integration. It can also query that manifest for information about your package
+
+      - name: asimonim
+        npm-name: "@pwrs/asimonim"
+        url: https://github.com/bennypowers/asimonim
+        npm-url: https://www.npmjs.com/package/@pwrs/asimonim
+        docs: https://bennypowers.dev/asimonim
+        platform: GitHub
+        org: bennypowers
+        status: active
+        description: A high-performance design tokens parser, validator, and language server, available as a CLI tool and Go library.
+        contacts: [Benny]
+        tags: [dependency, personal]
+        notes: Upstream tooling dependency for RHDS
+
+      - name: mappa
+        npm-name: "@pwrs/mappa"
+        url: https://github.com/bennypowers/mappa
+        npm-url: https://www.npmjs.com/package/@pwrs/mappa
+        docs: https://bennypowers.dev/mappa
+        platform: GitHub
+        org: bennypowers
+        status: active
+        description: The high-performance import map generator for the modern web, available as a CLI tool and Go library.
+        contacts: [Benny]
+        tags: [dependency, personal]
+        consumers: [patternfly-elements]
+        notes: Upstream tooling dependency for RHDS. Modern web applications use ES modules with bare specifiers like import { html } from 'lit'. Browsers need import maps to resolve these specifiers to actual URLs. Mappa generates import maps from your package.json dependencies, pointing to your local node_modules paths or to a path of your choosing (like /assets/packages/.... It's designed to be fast, with parallel dependency resolution.
+
+      - name: lit-css
+        npm-name: "@pwrs/lit-css"
+        url: https://github.com/bennypowers/lit-css
+        npm-url: https://www.npmjs.com/package/@pwrs/lit-css
+        platform: GitHub
+        org: bennypowers
+        status: active
+        description: CSS handling utilities for Lit web components
+        contacts: [Benny]
+        tags: [dependency, personal]
+        notes: Build plugins to import css files as JavaScript tagged-template literal objects.
+
+  - id: experimental
+    name: Research & Experiments
+    description: Prototypes, research projects, and early-stage tools
+    items:
+      - name: lit-ssr-wasm
+        url: https://github.com/bennypowers/lit-ssr-wasm
+        docs: https://bennypowers.github.io/lit-ssr-wasm/
+        platform: GitHub
+        org: bennypowers
+        status: experimental
+        description: Server-side rendering of Lit components in WebAssembly
+        contacts: [Benny]
+        tags: [personal, prototype]
+        notes: Offered to Drupal team, got wishy-washy reception.
+
+      - name: golit
+        url: https://github.com/zeroedin/golit
+        platform: GitHub
+        org: zeroedin
+        status: experimental
+        description: Go-based SSR for Lit web components
+        contacts: [Steven]
+        tags: [personal, prototype]
+
+      - name: chickadee
+        url: https://github.com/bennypowers/chickadee
+        docs: https://bennypowers.github.io/chickadee/
+        platform: GitHub
+        org: bennypowers
+        status: experimental
+        description: Chickadee is a unified web component library built from first principles for product UIs and marketing sites.
+        contacts: [Benny]
+        tags: [personal, prototype]
+        notes: Rough draft at something like Felt.
+
+      - name: alloy
+        url: https://github.com/zeroedin/alloy
+        docs: https://alloyssg.dev/
+        platform: GitHub
+        org: zeroedin
+        status: experimental
+        description: Custom static site generator
+        contacts: [Steven]
+        tags: [personal, prototype]
+        notes: The original idea was to replace 11ty for ux.redhat.com.
+
+      - name: Editor plugins
+        platform: Various
+        org: bennypowers
+        status: active
+        description: Open-source editor plugins for various IDEs
+        contacts: [Benny]
+        tags: [personal]
+
+  - id: inactive
+    name: Inactive / Archived
+    description: Projects that are dead or no longer maintained
+    items:
+      - name: red-hat-extensions
+        url: https://github.com/RedHat-UX/red-hat-extensions
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: Planned platform for migrating custom elements
+        notes: >
+          Dead per Kyle. Idea that never took off —
+          was going to be where cp-elements migrated to.
+
+      - name: cp-elements
+        platform: Unknown
+        org: Customer Portal
+        status: inactive
+        description: Custom element implementation by the Customer Portal team
+        notes: >
+          Various members over the years. Maintenance issues.
+          Was going to migrate to red-hat-extensions (also dead).
+
+      - name: rh-footer-demo
+        url: https://github.com/RedHat-UX/rh-footer-demo
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: This app is an example of how to import and use the <rh-footer> via npm.
+
+      - name: pfe-react-wrappers-demo
+        url: https://github.com/RedHat-UX/pfe-react-wrappers-demo
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+
+      - name: red-hat-theme-for-patternfly6
+        url: https://github.com/RedHat-UX/red-hat-theme-for-patternfly6
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: The Red Hat Brand Theme is an ongoing initiative to patch the CSS styles of components from PatternFly version 6 and PatternFly Elements to more closely align with the Red Hat Design System. This initiative ensures design and user experience consistency across Red Hat’s digital experiences, in full alignment with the standards and guidelines established in the Red Hat Design System.
+
+      - name: demo-red-hat-theme-for-patternfly6
+        url: https://github.com/RedHat-UX/demo-red-hat-theme-for-patternfly6
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: patternfly-6-hackday
+
+      - name: next-gen-ui-examples
+        url: https://github.com/RedHat-UX/next-gen-ui-examples
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: Repository contains example applications and extensions for Next Gen UI Agent
+        
+      - name: next-gen-ui-react
+        url: https://github.com/RedHat-UX/next-gen-ui-react
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: This npm package provides a collection of reusable Patternfly React components to support dynamic UI rendering for Next Gen UI Agent.
+
+      - name: next-gen-ui-agent
+        url: https://github.com/RedHat-UX/next-gen-ui-agent
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: The goal of this AI agent is to generate personalised and rich UI components based on the user prompt, chat history and backend data provided by other agent in your assistant.
+
+      - name: red-hat-design-site
+        url: https://github.com/RedHat-UX/red-hat-design-site
+        docs: https://design.redhat.com/
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: The old ux.redhat.com website - was likely built by Dan Caryll before RHDS was a thing.
+
+  - id: pf-core
+    name: PatternFly Core
+    description: Core CSS, design tokens, and documentation framework
+    items:
+      - name: patternfly-design-tokens
+        url: https://github.com/patternfly/design-tokens
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Design tokens consumed by PatternFly core CSS
+        notes: Fed by Figma and Sketch design sources.
+
+      - name: patternfly
+        npm-name: 
+        url: https://github.com/patternfly/patternfly
+        npm-url:
+        docs: 
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Core CSS/SCSS framework (@patternfly/patternfly)
+        dependsOn: [patternfly-org, patternfly-a11y, pf-react]
+        notes: Specifically depends on "@patternfly/react-code-editor," "@patternfly/react-core," "@patternfly/react-icons," and "@patternfly/react-table"
+
+      - name: patternfly-org
+        npm-name: "@patternfly/documentation-framework"
+        url: https://github.com/patternfly/patternfly-org
+        npm-url: 
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Documentation framework and patternfly.org site
+        dependsOn: [patternfly, patternfly-react]
+
+  - id: pf-react
+    name: PatternFly React
+    description: React component monorepo
+    items:
+      - name: patternfly-react
+        url: https://github.com/patternfly/patternfly-react
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: >
+          Monorepo for all PatternFly React packages (react-core, react-table,
+          react-charts, react-icons, react-tokens, react-styles,
+          react-code-editor, react-templates, react-drag-drop, react-docs, react-integration, eslint-plugin-patternfly-react, transformer-cjs-imports, transformer-react-styles-esm-imports)
+        dependsOn: [patternfly-org, patternfly, patternfly-design-tokens, patternfly-a11y, red-hat-icons]
+        notes: Many packages are interdependent. react-code-editor is based on Monaco. react-charts is based on Victory. react-drag-drop is based on @dnd-kit.
+
+  - id: pf-extensions
+    name: PatternFly Extensions
+    description: Extension component libraries built on PatternFly React
+    items:
+      - name: chatbot
+        npm-name: "@patternfly/chatbot"
+        url: https://github.com/patternfly/chatbot
+        npm-url: https://www.npmjs.com/package/@patternfly/chatbot
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: AI chatbot components
+        dependsOn: [patternfly-react, patternfly-org, patternfly, patternfly-a11y]
+
+      - name: react-topology
+        npm-name: "@patternfly/react-topology"
+        url: https://github.com/patternfly/react-topology
+        npm-url: https://www.npmjs.com/package/@patternfly/react-topology
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Topology/graph visualization components
+        dependsOn: [patternfly-react]
+
+      - name: react-component-groups
+        npm-name: "@patternfly/react-component-groups"
+        url: https://github.com/patternfly/react-component-groups
+        npm-url: https://www.npmjs.com/package/@patternfly/react-component-groups
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Reusable composed component patterns
+        dependsOn: [patternfly-react]
+
+      - name: react-data-view
+        npm-name: "@patternfly/react-data-view"
+        url: https://github.com/patternfly/react-data-view
+        npm-url: https://www.npmjs.com/package/@patternfly/react-data-view
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Data view components
+        dependsOn: [patternfly-react]
+
+      - name: react-log-viewer
+        npm-name: "@patternfly/react-log-viewer"
+        url: https://github.com/patternfly/react-log-viewer
+        npm-url: https://www.npmjs.com/package/@patternfly/react-log-viewer
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Log viewer component
+        dependsOn: [patternfly-react]
+
+      - name: react-catalog-view
+        npm-name: "@patternfly/react-catalog-view-extension"
+        url: https://github.com/patternfly/react-catalog-view
+        npm-url: https://www.npmjs.com/package/@patternfly/react-catalog-view-extension
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Catalog/tile view components
+        dependsOn: [patternfly-react]
+
+      - name: react-console
+        npm-name: "@patternfly/react-console"
+        url: https://github.com/patternfly/react-console
+        npm-url: https://www.npmjs.com/package/@patternfly/react-console
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Terminal/console components
+        dependsOn: [patternfly-react]
+
+      - name: react-user-feedback
+        npm-name: "@patternfly/react-user-feedback"
+        url: https://github.com/patternfly/react-user-feedback
+        npm-url: https://www.npmjs.com/package/@patternfly/react-user-feedback
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: User feedback components
+        dependsOn: [patternfly-react]
+
+      - name: patternfly-quickstarts
+        npm-name: "@patternfly/quickstarts"
+        url: https://github.com/patternfly/patternfly-quickstarts
+        npm-url: https://www.npmjs.com/package/@patternfly/quickstarts
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Quickstart/guided-tour components
+        dependsOn: [patternfly-react]
+
+      - name: react-virtualized-extension
+        npm-name: "@patternfly/react-virtualized-extension"
+        url: https://github.com/patternfly/react-virtualized-extension
+        npm-url: https://www.npmjs.com/package/@patternfly/react-virtualized-extension
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Virtualized table/list extension
+        dependsOn: [patternfly-react]
+
+  - id: pf-tooling
+    name: PatternFly Tooling
+    description: Migration tools, testing, starter templates, and experimental repos
+    items:
+      - name: pf-codemods
+        npm-name: "@patternfly/pf-codemods"
+        url: https://github.com/patternfly/pf-codemods
+        npm-url: https://www.npmjs.com/package/@patternfly/pf-codemods
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Codemods for PatternFly version migrations
+
+      - name: patternfly-a11y
+        npm-name: "@patternfly/patternfly-a11y"
+        url: https://github.com/patternfly/patternfly-a11y
+        npm-url: https://www.npmjs.com/package/@patternfly/patternfly-a11y
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Accessibility testing utilities
+
+      - name: patternfly-react-seed
+        url: https://github.com/patternfly/patternfly-react-seed
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Starter template for PatternFly React apps
+
+      - name: patternfly-extension-seed
+        url: https://github.com/patternfly/patternfly-extension-seed
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Starter template for PatternFly extension repos
+        dependsOn: [patternfly-react]
+
+      - name: patternfly-labs
+        url: https://github.com/patternfly/patternfly-labs
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Experimental/incubator components
+        notes: Some stragglers still use this but we don't spend a lot of time on it.
+
+      - name: testing-status-dashboard
+        url: https://github.com/patternfly/mission-control-dashboard
+        docs: https://dashboard-navy-six-51.vercel.app/
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: CI Dashboard for monitoring build status of PatternFly repos.
+
+     
