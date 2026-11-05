@@ -2,14 +2,18 @@
 
 Interactive dashboard mapping all codebases, tools, and infrastructure owned by the Felt Platform team.
 
-## Quick start
+## Live site
+
+Hosted on GitHub Pages — just push to `main` and the dashboard is live.
+
+## Local development
 
 ```bash
 cd felt-platform-inventory
 npx serve
 ```
 
-Then open [http://localhost:3000/felt-platform-inventory.html](http://localhost:3000/felt-platform-inventory.html)
+Then open [http://localhost:3000](http://localhost:3000)
 
 Any static file server works — `python -m http.server`, `php -S localhost:8000`, etc. The HTML fetches the YAML at runtime, so both files must be served from the same directory.
 
@@ -17,7 +21,7 @@ Opening the HTML directly as a `file://` URL won't work (browsers block `fetch` 
 
 ## Updating the inventory
 
-Edit `felt-platform-inventory.yaml` — it is the single source of truth. The HTML viewer never needs editing for data changes.
+Edit `felt-platform-inventory.yaml`.
 
 ### Adding an item
 
@@ -25,7 +29,9 @@ Add an entry under the appropriate area's `items` list:
 
 ```yaml
 - name: my-new-repo
+  npm-name: @rh-felt/my-new-repo
   url: https://github.com/patternfly/my-new-repo
+  npm-url: https://npmjs.org/packages/@rh-felt/my-new-repo
   platform: GitHub
   org: patternfly
   status: active
@@ -37,7 +43,7 @@ Add an entry under the appropriate area's `items` list:
   notes: Any additional context.   # optional
 ```
 
-Only `name`, `status`, and `description` are required. All other fields default to empty.
+Only `name`, `status`, and `description` are required. All other fields default to empty. `npm-name` and `npm-url` are not currently displayed in the UI.
 
 ### Adding a new area
 
@@ -51,7 +57,7 @@ Add a new entry to the top-level `areas` list:
     - name: ...
 ```
 
-The dashboard and architecture graph pick up new areas automatically — no HTML changes needed.
+The dashboard and architecture graph pick up new areas automatically.
 
 ### Statuses
 
@@ -75,4 +81,4 @@ The dashboard and architecture graph pick up new areas automatically — no HTML
 | File | Purpose |
 |---|---|
 | `felt-platform-inventory.yaml` | Source of truth — edit this |
-| `felt-platform-inventory.html` | Dashboard viewer — read-only |
+| `index.html` | Dashboard viewer (served by GitHub Pages) |
