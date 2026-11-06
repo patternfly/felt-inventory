@@ -82,7 +82,7 @@ areas:
         status: active
         description: PatternFly web components
         contacts: [RHDS team]
-        dependsOn: ["@patternfly/patternfly", cem, mappa, red-hat-design-system]
+        dependsOn: [patternfly, cem, mappa, red-hat-design-system]
 
       - name: red-hat-design-skills
         url: https://github.com/RedHat-UX/red-hat-design-skills
@@ -232,26 +232,34 @@ areas:
         notes: Fed by Figma and Sketch design sources.
 
       - name: patternfly
-        npm-name: 
+        npm-name: "@patternfly/patternfly"
         url: https://github.com/patternfly/patternfly
-        npm-url:
-        docs: 
+        npm-url: https://www.npmjs.com/package/@patternfly/patternfly
         platform: GitHub
         org: patternfly
         status: active
         description: Core CSS/SCSS framework (@patternfly/patternfly)
-        dependsOn: [patternfly-org, patternfly-a11y, pf-react]
+        dependsOn: [patternfly-org, patternfly-a11y, patternfly-react]
         notes: Specifically depends on "@patternfly/react-code-editor," "@patternfly/react-core," "@patternfly/react-icons," and "@patternfly/react-table"
 
       - name: patternfly-org
         npm-name: "@patternfly/documentation-framework"
         url: https://github.com/patternfly/patternfly-org
-        npm-url: 
+        npm-url: https://www.npmjs.com/package/@patternfly/documentation-framework
         platform: GitHub
         org: patternfly
         status: active
         description: Documentation framework and patternfly.org site
-        dependsOn: [patternfly, patternfly-react]
+        dependsOn: [patternfly, patternfly-react, patternfly-a11y]
+        notes: Site imports patternfly-design-tokens and all extensions so we can serve website.
+
+      - name: patternfly-mcp
+        url: https://github.com/patternfly/patternfly-mcp
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: An MCP server that provides access to PatternFly rules and documentation.
+        dependsOn: [patternfly-component-schemas]
 
   - id: pf-react
     name: PatternFly React
@@ -281,7 +289,7 @@ areas:
         org: patternfly
         status: active
         description: AI chatbot components
-        dependsOn: [patternfly-react, patternfly-org, patternfly, patternfly-a11y]
+        dependsOn: [patternfly, patternfly-react, patternfly-a11y, patternfly-org]
 
       - name: react-topology
         npm-name: "@patternfly/react-topology"
@@ -291,7 +299,7 @@ areas:
         org: patternfly
         status: active
         description: Topology/graph visualization components
-        dependsOn: [patternfly-react]
+        dependsOn: [patternfly, patternfly-react, patternfly-a11y, patternfly-org]
 
       - name: react-component-groups
         npm-name: "@patternfly/react-component-groups"
@@ -301,7 +309,7 @@ areas:
         org: patternfly
         status: active
         description: Reusable composed component patterns
-        dependsOn: [patternfly-react]
+        dependsOn: [patternfly, patternfly-react, patternfly-a11y, patternfly-org]
 
       - name: react-data-view
         npm-name: "@patternfly/react-data-view"
@@ -311,7 +319,7 @@ areas:
         org: patternfly
         status: active
         description: Data view components
-        dependsOn: [patternfly-react]
+        dependsOn: [patternfly, patternfly-react, patternfly-a11y, patternfly-org, react-component-groups]
 
       - name: react-log-viewer
         npm-name: "@patternfly/react-log-viewer"
@@ -321,7 +329,7 @@ areas:
         org: patternfly
         status: active
         description: Log viewer component
-        dependsOn: [patternfly-react]
+        dependsOn: [patternfly, patternfly-react, patternfly-a11y, patternfly-org]
 
       - name: react-catalog-view
         npm-name: "@patternfly/react-catalog-view-extension"
@@ -331,7 +339,7 @@ areas:
         org: patternfly
         status: active
         description: Catalog/tile view components
-        dependsOn: [patternfly-react]
+        dependsOn: [patternfly, patternfly-react, patternfly-a11y, patternfly-org]
 
       - name: react-console
         npm-name: "@patternfly/react-console"
@@ -341,7 +349,7 @@ areas:
         org: patternfly
         status: active
         description: Terminal/console components
-        dependsOn: [patternfly-react]
+        dependsOn: [patternfly, patternfly-react, patternfly-a11y, patternfly-org]
 
       - name: react-user-feedback
         npm-name: "@patternfly/react-user-feedback"
@@ -361,7 +369,7 @@ areas:
         org: patternfly
         status: active
         description: Quickstart/guided-tour components
-        dependsOn: [patternfly-react]
+        dependsOn: [patternfly, patternfly-react, patternfly-a11y, patternfly-org]
 
       - name: react-virtualized-extension
         npm-name: "@patternfly/react-virtualized-extension"
@@ -425,6 +433,14 @@ areas:
         org: patternfly
         status: active
         description: CI Dashboard for monitoring build status of PatternFly repos.
+
+      - name: patternfly-cli
+        url: https://github.com/patternfly/patternfly-cli
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: CLI tool for scaffolding projects, performing code modifications, and running project-related tasks
+        dependsOn: ["@patternfly/context-for-ai"]
 
   - id: experimental
     name: Research & Experiments
