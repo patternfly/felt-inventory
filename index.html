@@ -19,8 +19,6 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e =
   gap: var(--pf-t--global--spacer--sm);
 }
 
-body { margin: 0; font-family: var(--pf-t--global--font--family--body); }
-
 .inventory-search {
   margin-block-start: var(--pf-t--global--spacer--md);
   margin-block-end: var(--pf-t--global--spacer--md);
@@ -36,22 +34,18 @@ body { margin: 0; font-family: var(--pf-t--global--font--family--body); }
   vertical-align: middle;
   background: var(--dot-color);
 }
-.inv-dot[data-status="active"]   { --dot-color: #4CB140; }
-.inv-dot[data-status="new"]      { --dot-color: #0066CC; }
-.inv-dot[data-status="experimental"] { --dot-color: #F0AB00; }
-.inv-dot[data-status="needs-decision"] { --dot-color: #EC7A08; }
-.inv-dot[data-status="inactive"] { --dot-color: #8A8D90; }
-.inv-dot[data-status="unknown"]  { --dot-color: #A18FFF; }
+.inv-dot[data-status="active"] { --dot-color: var(--pf-v6-c-label--m-green--BackgroundColor); }
+.inv-dot[data-status="new"] { --dot-color: var(--pf-v6-c-label--m-yellow--BackgroundColor); }
+.inv-dot[data-status="experimental"] { --dot-color: var(--pf-v6-c-label--m-orange--BackgroundColor); }
+.inv-dot[data-status="needs-decision"] { --dot-color: var(--pf-v6-c-label--m-orangered--BackgroundColor); }
+.inv-dot[data-status="inactive"] { --dot-color: var(--pf-v6-c-label--m-teal--BackgroundColor); }
+.inv-dot[data-status="unknown"] { --dot-color: var(--pf-v6-c-label--m-purple--BackgroundColor); }
 
-
-.pf-v6-c-accordion__item[hidden] { display: none !important; }
 .pf-v6-c-accordion__toggle {
   font-size: var(--pf-t--global--font--size--heading--sm);
   font-weight: 700;
   font-family: var(--pf-t--global--font--family--heading);
-  justify-content: flex-start;
 }
-.pf-v6-c-accordion__toggle-text { flex: none; }
 .area-count {
   font-size: var(--pf-t--global--font--size--xs);
   color: var(--pf-t--global--text--color--subtle);
@@ -64,14 +58,12 @@ body { margin: 0; font-family: var(--pf-t--global--font--family--body); }
   margin: 0 0 var(--pf-t--global--spacer--sm);
 }
 
-.inv-item .pf-v6-c-card__header { flex-wrap: wrap; gap: var(--pf-t--global--spacer--xs); align-items: center; }
+.pf-v6-c-description-list { --pf-v6-c-description-list__term--FontSize: 12px; }
+
 .inv-item .inv-item-name {
   font-weight: 600;
-  font-size: var(--pf-t--global--font--size--sm);
   margin-right: auto;
 }
-.inv-item .inv-item-name a { color: var(--pf-t--global--text--color--regular); text-decoration: none; }
-.inv-item .inv-item-name a:hover { color: var(--pf-t--global--text--color--brand--default); text-decoration: underline; }
 
 .inv-item .inv-meta {
   display: flex;
@@ -79,20 +71,10 @@ body { margin: 0; font-family: var(--pf-t--global--font--family--body); }
   gap: var(--pf-t--global--spacer--xs);
   margin-top: var(--pf-t--global--spacer--sm);
 }
-.inv-item .inv-relations {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--pf-t--global--spacer--sm);
+.inv-item .pf-v6-c-description-list {
   margin-top: var(--pf-t--global--spacer--sm);
   font-size: var(--pf-t--global--font--size--xs);
 }
-.inv-item .inv-relations dt {
-  color: var(--pf-t--global--text--color--subtle);
-  font-weight: 600;
-  display: inline;
-}
-.inv-item .inv-relations dd { display: inline; margin: 0; color: var(--pf-t--global--text--color--subtle); }
-.inv-rel-group { display: flex; align-items: baseline; gap: var(--pf-t--global--spacer--xs); }
 
 .inv-item .inv-notes {
   font-size: var(--pf-t--global--font--size--xs);
@@ -103,23 +85,17 @@ body { margin: 0; font-family: var(--pf-t--global--font--family--body); }
   font-style: italic;
 }
 
-.inv-item[hidden] { display: none !important; }
+.inv-item[hidden], #questions-callout[hidden] { display: none }
 
 #questions-callout { margin-bottom: var(--pf-t--global--spacer--md); }
-#questions-callout h4 { margin: 0; }
+
 #questions-list { margin: var(--pf-t--global--spacer--sm) 0 0; padding-left: var(--pf-t--global--spacer--lg); }
 
 .tt-contacts { margin-top: var(--pf-t--global--spacer--xs); }
 
-.accordion-chevron { width: 1em; height: 1em; }
-
-.tab-panel { display: none; }
-.tab-panel.active { display: block; margin-top: var(--pf-t--global--spacer--md); }
-
 .no-results {
   text-align: center;
-  padding: var(--pf-t--global--spacer--xl) var(--pf-t--global--spacer--md);
-  color: var(--pf-t--global--text--color--subtle);
+  
 }
 
 /* Architecture graph */
@@ -226,7 +202,7 @@ body { margin: 0; font-family: var(--pf-t--global--font--family--body); }
 
 <div class="pf-v6-c-page pf-m-plain">
   <div class="pf-v6-c-skip-to-content">
-    <a class="pf-v6-c-button pf-m-primary" href="#main-content-page-demo-plain">
+    <a class="pf-v6-c-button pf-m-primary" href="#main-content-page-demo-basic">
       <span class="pf-v6-c-button__text">Skip to content</span>
     </a>
   </div>
@@ -245,85 +221,82 @@ body { margin: 0; font-family: var(--pf-t--global--font--family--body); }
       tabindex="-1"
       id="main-content-page-demo-basic"
     >
-      <section class="pf-v6-c-page__main-section pf-m-plain pf-m-no-padding">
-        <div class="pf-v6-c-page__main-body">
-          <div class="pf-v6-c-tabs" id="main-tabs">
-            <ul class="pf-v6-c-tabs__list" role="tablist">
-              <li class="pf-v6-c-tabs__item pf-m-current" role="presentation">
-                <button class="pf-v6-c-tabs__link" role="tab" aria-selected="true" data-tab="inventory" type="button">
-                  <span class="pf-v6-c-tabs__item-text">Inventory</span>
-                </button>
-              </li>
-              <li class="pf-v6-c-tabs__item" role="presentation">
-                <button class="pf-v6-c-tabs__link" role="tab" aria-selected="false" data-tab="architecture" type="button">
-                  <span class="pf-v6-c-tabs__item-text">Architecture</span>
-                </button>
-              </li>
-            </ul>
+      <div class="pf-v6-c-tabs" id="main-tabs">
+        <ul class="pf-v6-c-tabs__list" role="tablist">
+          <li class="pf-v6-c-tabs__item pf-m-current" role="presentation">
+            <button class="pf-v6-c-tabs__link" id="open-tabs-inventory-link" role="tab" aria-selected="true" aria-controls="panel-inventory" data-tab="inventory" type="button">
+              <span class="pf-v6-c-tabs__item-text">Inventory</span>
+            </button>
+          </li>
+          <li class="pf-v6-c-tabs__item" role="presentation">
+            <button class="pf-v6-c-tabs__link" id="open-tabs-architecture-link" role="tab" aria-selected="false" aria-controls="panel-architecture" data-tab="architecture" type="button">
+              <span class="pf-v6-c-tabs__item-text">Architecture</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+      <section class="pf-v6-c-page__section">
+        <section class="pf-v6-c-tab-content" id="panel-inventory" role="tabpanel" tabindex="0" aria-labelledby="open-tabs-inventory-link">
+          <div class="pf-v6-c-alert pf-m-warning" id="questions-callout" hidden>
+            <div class="pf-v6-c-alert__title"><h2>Open Questions</h2></div>
+            <div class="pf-v6-c-alert__description"><ul id="questions-list"></ul></div>
           </div>
-
-          <div class="tab-panel active" id="panel-inventory">
-            <div class="pf-v6-c-alert pf-m-warning" id="questions-callout">
-              <div class="pf-v6-c-alert__title"><h4>Open Questions</h4></div>
-              <div class="pf-v6-c-alert__description"><ul id="questions-list"></ul></div>
+          <div class="pf-v6-c-text-input-group inventory-search">
+            <div class="pf-v6-c-text-input-group__main">
+              <span class="pf-v6-c-text-input-group__text">
+                <input
+                  class="pf-v6-c-text-input-group__text-input"
+                  type="text"
+                  value
+                  aria-label="Search inventory"
+                  placeholder="Search repos, tools, people…"
+                  id="search"
+                />
+              </span>
             </div>
-            <div class="pf-v6-c-text-input-group inventory-search">
-              <div class="pf-v6-c-text-input-group__main">
-                <span class="pf-v6-c-text-input-group__text">
-                  <input
-                    class="pf-v6-c-text-input-group__text-input"
-                    type="text"
-                    value
-                    aria-label="Basic"
-                    placeholder="Search repos, tools, people…"
-                    aria-label="Search inventory" id="search"
-                  />
-                </span>
-              </div>
-            </div>
-            <div class="pf-v6-c-toolbar" id="stats-toolbar">
-              <div class="pf-v6-c-toolbar__content">
-                <div class="pf-v6-c-toolbar__content-section">
-                  <div class="pf-v6-c-toolbar__group pf-m-filter-group" id="stats" role="group" aria-label="Filter by status"></div>
-                </div>
-              </div>
-            </div>
-            <div id="inventory"></div>
-            <div class="no-results" id="no-results" hidden>No items match your search.</div>
           </div>
-
-          <div class="tab-panel" id="panel-architecture">
-            <div class="pf-v6-l-flex">
-              <div class="pf-v6-l-flex__item">
-                <p>Drag nodes to rearrange &middot; Scroll to zoom &middot; Click to highlight</p>
-            </div>
-              <div class="pf-v6-l-flex__item">
-                <button class="pf-v6-c-button pf-m-secondary pf-m-small " type="button" id="graph-reset">Reset view</button>
+          <div class="pf-v6-c-toolbar" id="stats-toolbar">
+            <div class="pf-v6-c-toolbar__content">
+              <div class="pf-v6-c-toolbar__content-section">
+                <div class="pf-v6-c-toolbar__group pf-m-filter-group" id="stats" role="group" aria-label="Filter by status"></div>
               </div>
-              <div class="pf-v6-l-flex__item">
-                <div class="pf-v6-c-toolbar graph-toolbar">
-                  <div class="pf-v6-c-toolbar__content">
-                    <div class="pf-v6-c-toolbar__content-section">
-                      <div class="pf-v6-c-toolbar__group pf-m-align-end pf-m-align-items-center">
-                        <div class="pf-v6-c-toolbar__item"><strong>Legend</strong></div>
-                        <div class="pf-v6-c-toolbar__item" id="graph-legend"></div>
-                      </div>
+            </div>
+          </div>
+          <div id="inventory"></div>
+          <div class="no-results" id="no-results" hidden>No items match your search.</div>
+        </section>
+
+        <section class="pf-v6-c-tab-content" id="panel-architecture" role="tabpanel" tabindex="0" aria-labelledby="open-tabs-architecture-link" hidden>
+          <div class="pf-v6-l-flex">
+            <div class="pf-v6-l-flex__item">
+              <p>Drag nodes to rearrange &middot; Scroll to zoom &middot; Click to highlight</p>
+            </div>
+            <div class="pf-v6-l-flex__item">
+              <button class="pf-v6-c-button pf-m-secondary pf-m-small" type="button" id="graph-reset">Reset view</button>
+            </div>
+            <div class="pf-v6-l-flex__item">
+              <div class="pf-v6-c-toolbar graph-toolbar">
+                <div class="pf-v6-c-toolbar__content">
+                  <div class="pf-v6-c-toolbar__content-section">
+                    <div class="pf-v6-c-toolbar__group pf-m-align-end pf-m-align-items-center">
+                      <div class="pf-v6-c-toolbar__item"><strong>Legend</strong></div>
+                      <div class="pf-v6-c-toolbar__item" id="graph-legend"></div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            
-            <div class="graph-container" id="graph-container">
-              <svg id="graph-svg"></svg>
-            </div>
           </div>
 
-          <div class="graph-tooltip" id="graph-tooltip"></div>
+          <div class="graph-container" id="graph-container">
+            <svg id="graph-svg"></svg>
+          </div>
+        </section>
 
-          <div class="no-results" id="loading-msg">Loading inventory data&hellip;</div>
-          <div class="no-results" id="load-error" hidden></div>
-       </div>
+        <div class="graph-tooltip" id="graph-tooltip"></div>
+
+        <div class="no-results" id="loading-msg">Loading inventory data&hellip;</div>
+        <div class="no-results" id="load-error" hidden></div>
       </section>
     </main>
   </div>
@@ -334,26 +307,14 @@ let DATA = null;
 
 const STATUS = {
   'active':         { label: 'Active',        pf: 'green' },
-  'new':            { label: 'New',            pf: 'blue' },
+  'new':            { label: 'New',            pf: 'yellow' },
   'experimental':   { label: 'Experimental',   pf: 'orange' },
   'needs-decision': { label: 'Needs Decision', pf: 'orangered' },
-  'inactive':       { label: 'Inactive',       pf: 'gray' },
+  'inactive':       { label: 'Inactive',       pf: 'teal' },
   'unknown':        { label: 'Unknown',        pf: 'purple' }
 };
 
-const AREA_COLORS = {
-  'rhds-core': '#0066CC',
-  'rhds-infra': '#8481DD',
-  'upstream': '#009596',
-  'experimental': '#F4C145',
-  'inactive': '#8A8D90',
-  'to-investigate': '#A18FFF',
-  'pf-core': '#004080',
-  'pf-react': '#3E8635',
-  'pf-extensions': '#C9190B',
-  'pf-tooling': '#005F60'
-};
-const AREA_PALETTE = ['#0066CC','#8481DD','#009596','#F4C145','#3E8635','#C9190B','#005F60','#EC7A08','#A18FFF','#8A8D90',];
+let areaColor;
 
 let activeStatusFilter = null;
 let searchQuery = '';
@@ -401,7 +362,11 @@ function renderStats() {
 }
 
 function renderQuestions() {
-  document.getElementById('questions-list').innerHTML = DATA.openQuestions.map(q =>
+  const questions = DATA.openQuestions || [];
+  const callout = document.getElementById('questions-callout');
+  if (!questions.length) { callout.hidden = true; return; }
+  callout.hidden = false;
+  document.getElementById('questions-list').innerHTML = questions.map(q =>
     `<li><strong>${q.question}:</strong> ${q.context}</li>`
   ).join('');
 }
@@ -423,10 +388,10 @@ function renderCard(item) {
   html += '</div>';
   const hasRel = (item.dependsOn && item.dependsOn.length) || (item.consumers && item.consumers.length);
   if (hasRel) {
-    html += '<div class="inv-relations">';
-    if (item.dependsOn && item.dependsOn.length) html += `<div class="inv-rel-group"><dt>Depends on:</dt> <dd>${item.dependsOn.join(', ')}</dd></div>`;
-    if (item.consumers && item.consumers.length) html += `<div class="inv-rel-group"><dt>Used by:</dt> <dd>${item.consumers.join(', ')}</dd></div>`;
-    html += '</div>';
+    html += '<dl class="pf-v6-c-description-list pf-m-horizontal pf-m-compact">';
+    if (item.dependsOn && item.dependsOn.length) html += `<div class="pf-v6-c-description-list__group"><dt class="pf-v6-c-description-list__term"><span class="pf-v6-c-description-list__text">Depends on</span></dt><dd class="pf-v6-c-description-list__description"><div class="pf-v6-c-description-list__text">${item.dependsOn.join(', ')}</div></dd></div>`;
+    if (item.consumers && item.consumers.length) html += `<div class="pf-v6-c-description-list__group"><dt class="pf-v6-c-description-list__term"><span class="pf-v6-c-description-list__text">Used by</span></dt><dd class="pf-v6-c-description-list__description"><div class="pf-v6-c-description-list__text">${item.consumers.join(', ')}</div></dd></div>`;
+    html += '</dl>';
   }
   if (item.notes) html += `<div class="inv-notes">${item.notes}</div>`;
   html += '</div></article>';
@@ -435,17 +400,19 @@ function renderCard(item) {
 
 function renderInventory() {
   const main = document.getElementById('inventory');
-  const chevron = '<svg class="accordion-chevron" viewBox="0 0 320 512" fill="currentColor"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>';
+  const chevron = '<svg class="pf-v6-svg" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true" role="img" width="1em" height="1em"><path d="M18.71 5.29a.996.996 0 0 0-1.41 0l-7.29 7.29-7.3-7.29a.987.987 0 0 0-1.41-.02.987.987 0 0 0-.02 1.41l.02.02 7.65 7.65c.29.29.68.44 1.06.44s.77-.15 1.06-.44l7.65-7.65a.996.996 0 0 0 0-1.41Z" /></svg>'
   let html = '<div class="pf-v6-c-accordion pf-m-plain">';
   for (const area of DATA.areas) {
     const contentId = 'area-content-' + area.id;
     html += `<div class="pf-v6-c-accordion__item pf-m-expanded" data-area="${area.id}">
-      <button class="pf-v6-c-accordion__toggle" type="button" aria-expanded="true" aria-controls="${contentId}">
-        <span class="pf-v6-c-accordion__toggle-text">
-          ${area.name} <span class="area-count" data-area-count="${area.id}">(${area.items.length})</span>
-        </span>
-        <span class="pf-v6-c-accordion__toggle-icon">${chevron}</span>
-      </button>
+      <h3>
+        <button class="pf-v6-c-accordion__toggle" type="button" aria-expanded="true" aria-controls="${contentId}">
+          <span class="pf-v6-c-accordion__toggle-text">
+            ${area.name} <span class="area-count" data-area-count="${area.id}">(${area.items.length})</span>
+          </span>
+          <span class="pf-v6-c-accordion__toggle-icon">${chevron}</span>
+        </button>
+      </h3>
       <div class="pf-v6-c-accordion__expandable-content" id="${contentId}">
         <div class="pf-v6-c-accordion__expandable-content-body">
           <p class="area-desc">${area.description}</p>
@@ -464,6 +431,8 @@ function renderInventory() {
       const item = btn.closest('.pf-v6-c-accordion__item');
       const expanded = item.classList.toggle('pf-m-expanded');
       btn.setAttribute('aria-expanded', String(expanded));
+      const content = item.querySelector('.pf-v6-c-accordion__expandable-content');
+      content.hidden = !expanded;
     });
   });
 }
@@ -497,10 +466,11 @@ document.querySelectorAll('.pf-v6-c-tabs__link').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.pf-v6-c-tabs__item').forEach(t => t.classList.remove('pf-m-current'));
     document.querySelectorAll('.pf-v6-c-tabs__link').forEach(t => t.setAttribute('aria-selected', 'false'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.pf-v6-c-tab-content').forEach(p => p.hidden = true);
     tab.closest('.pf-v6-c-tabs__item').classList.add('pf-m-current');
     tab.setAttribute('aria-selected', 'true');
-    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    const panel = document.getElementById('panel-' + tab.dataset.tab);
+    panel.hidden = false;
     if (tab.dataset.tab === 'architecture' && !graphRendered) initGraph();
   });
 });
@@ -549,11 +519,9 @@ function initGraph() {
   const { nodes, links } = buildGraphData();
 
   const AREA_ORDER = [...DATA.areas.map(a => a.id)];
-  const AREA_LABELS = { };
-  DATA.areas.forEach((a, i) => {
-    AREA_LABELS[a.id] = a.name;
-    if (!AREA_COLORS[a.id]) AREA_COLORS[a.id] = AREA_PALETTE[i % AREA_PALETTE.length];
-  });
+  const AREA_LABELS = {};
+  DATA.areas.forEach(a => { AREA_LABELS[a.id] = a.name; });
+  areaColor = d3.scaleOrdinal(d3.schemeTableau10).domain(AREA_ORDER);
 
   const groups = {};
   nodes.forEach(n => {
@@ -592,7 +560,7 @@ function initGraph() {
       n._halfH = nodeH / 2;
     });
 
-    bandData.push({ areaId, label: AREA_LABELS[areaId], y: curY, height: bandH, color: AREA_COLORS[areaId] });
+    bandData.push({ areaId, label: AREA_LABELS[areaId], y: curY, height: bandH, color: areaColor(areaId) });
     curY += bandH + bandGap;
   });
 
@@ -699,9 +667,9 @@ function initGraph() {
     .attr('rx', 6).attr('ry', 6)
     .attr('width', nodeW).attr('height', nodeH)
     .attr('x', -nodeW / 2).attr('y', -nodeH / 2)
-    .attr('fill', d => AREA_COLORS[d.area] || '#BCC3C9')
+    .attr('fill', d => areaColor(d.area))
     .attr('fill-opacity', d => d.area === 'external' ? 0.12 : 0.18)
-    .attr('stroke', d => AREA_COLORS[d.area] || '#BCC3C9')
+    .attr('stroke', d => areaColor(d.area))
     .attr('stroke-width', 1.5);
 
   nodeSel.append('text')
@@ -715,7 +683,7 @@ function initGraph() {
   nodeSel.on('mouseover', (event, d) => {
     const sm = STATUS[d.status];
     tooltip.style.display = 'block';
-    tooltip.innerHTML = `<strong>${d.name}</strong>${d.description ? '<br>' + d.description : ''}${sm ? `<div class="tt-status">${pfLabel(sm.label, sm.pf)}</div>` : ''}${d.contacts && d.contacts.length ? `<div class="tt-status tt-contacts">${d.contacts.join(', ')}</div>` : ''}`;
+    tooltip.innerHTML = `<strong>${d.name}</strong>${d.description ? d.description : ''}${sm ? `<div class="tt-status">${pfLabel(sm.label, sm.pf)}</div>` : ''}${d.contacts && d.contacts.length ? `<div class="tt-status tt-contacts">${d.contacts.map(c => pfLabel(c, 'cyan', false)).join(' ')}</div>` : ''}`;
   }).on('mousemove', (event) => {
     tooltip.style.left = (event.clientX + 12) + 'px';
     tooltip.style.top = (event.clientY - 12) + 'px';
@@ -732,7 +700,7 @@ function initGraph() {
       if (l.source.id === d.id || l.target.id === d.id) {
         connected.add(l.source.id);
         connected.add(l.target.id);
-        d3.select(linkSel.nodes()[i]).classed('highlighted', true).attr('stroke', AREA_COLORS[d.area] || '#0066CC');
+        d3.select(linkSel.nodes()[i]).classed('highlighted', true).attr('stroke', areaColor(d.area));
       }
     });
     nodeSel.each(function(n) {
@@ -741,7 +709,7 @@ function initGraph() {
   });
 
   const legend = document.getElementById('graph-legend');
-  const legendItems = activeAreas.filter(a => a !== 'to-investigate').map(a => ({ label: AREA_LABELS[a], color: AREA_COLORS[a] }));
+  const legendItems = activeAreas.filter(a => a !== 'to-investigate').map(a => ({ label: AREA_LABELS[a], color: areaColor(a) }));
   legend.innerHTML = '<div class="pf-v6-c-label-group"><div class="pf-v6-c-label-group__main"><ul class="pf-v6-c-label-group__list">'
     + legendItems.map(l =>
       `<li class="pf-v6-c-label-group__list-item"><span class="pf-v6-c-label pf-m-compact pf-m-outline"><span class="pf-v6-c-label__content"><span class="pf-v6-c-label__icon"><span class="graph-legend-swatch" data-color="${l.color}"></span></span><span class="pf-v6-c-label__text">${l.label}</span></span></span></li>`

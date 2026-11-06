@@ -70,6 +70,8 @@ The dashboard and architecture graph pick up new areas automatically.
 | `inactive` | Dead or abandoned |
 | `unknown` | Needs investigation |
 
+Statuses are used to programmatically determine color.
+
 ## Features
 
 - **Inventory tab** — searchable, filterable list of all items grouped by area. Click status chips to filter.

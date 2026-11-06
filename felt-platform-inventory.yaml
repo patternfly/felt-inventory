@@ -219,139 +219,6 @@ areas:
         tags: [dependency, personal]
         notes: Build plugins to import css files as JavaScript tagged-template literal objects.
 
-  - id: experimental
-    name: Research & Experiments
-    description: Prototypes, research projects, and early-stage tools
-    items:
-      - name: lit-ssr-wasm
-        url: https://github.com/bennypowers/lit-ssr-wasm
-        docs: https://bennypowers.github.io/lit-ssr-wasm/
-        platform: GitHub
-        org: bennypowers
-        status: experimental
-        description: Server-side rendering of Lit components in WebAssembly
-        contacts: [Benny]
-        tags: [personal, prototype]
-        notes: Offered to Drupal team, got wishy-washy reception.
-
-      - name: golit
-        url: https://github.com/zeroedin/golit
-        platform: GitHub
-        org: zeroedin
-        status: experimental
-        description: Go-based SSR for Lit web components
-        contacts: [Steven]
-        tags: [personal, prototype]
-
-      - name: chickadee
-        url: https://github.com/bennypowers/chickadee
-        docs: https://bennypowers.github.io/chickadee/
-        platform: GitHub
-        org: bennypowers
-        status: experimental
-        description: Chickadee is a unified web component library built from first principles for product UIs and marketing sites.
-        contacts: [Benny]
-        tags: [personal, prototype]
-        notes: Rough draft at something like Felt.
-
-      - name: alloy
-        url: https://github.com/zeroedin/alloy
-        docs: https://alloyssg.dev/
-        platform: GitHub
-        org: zeroedin
-        status: experimental
-        description: Custom static site generator
-        contacts: [Steven]
-        tags: [personal, prototype]
-        notes: The original idea was to replace 11ty for ux.redhat.com.
-
-      - name: Editor plugins
-        platform: Various
-        org: bennypowers
-        status: active
-        description: Open-source editor plugins for various IDEs
-        contacts: [Benny]
-        tags: [personal]
-
-  - id: inactive
-    name: Inactive / Archived
-    description: Projects that are dead or no longer maintained
-    items:
-      - name: red-hat-extensions
-        url: https://github.com/RedHat-UX/red-hat-extensions
-        platform: GitHub
-        org: RedHat-UX
-        status: inactive
-        description: Planned platform for migrating custom elements
-        notes: >
-          Dead per Kyle. Idea that never took off —
-          was going to be where cp-elements migrated to.
-
-      - name: cp-elements
-        platform: Unknown
-        org: Customer Portal
-        status: inactive
-        description: Custom element implementation by the Customer Portal team
-        notes: >
-          Various members over the years. Maintenance issues.
-          Was going to migrate to red-hat-extensions (also dead).
-
-      - name: rh-footer-demo
-        url: https://github.com/RedHat-UX/rh-footer-demo
-        platform: GitHub
-        org: RedHat-UX
-        status: inactive
-        description: This app is an example of how to import and use the <rh-footer> via npm.
-
-      - name: pfe-react-wrappers-demo
-        url: https://github.com/RedHat-UX/pfe-react-wrappers-demo
-        platform: GitHub
-        org: RedHat-UX
-        status: inactive
-
-      - name: red-hat-theme-for-patternfly6
-        url: https://github.com/RedHat-UX/red-hat-theme-for-patternfly6
-        platform: GitHub
-        org: RedHat-UX
-        status: inactive
-        description: The Red Hat Brand Theme is an ongoing initiative to patch the CSS styles of components from PatternFly version 6 and PatternFly Elements to more closely align with the Red Hat Design System. This initiative ensures design and user experience consistency across Red Hat’s digital experiences, in full alignment with the standards and guidelines established in the Red Hat Design System.
-
-      - name: demo-red-hat-theme-for-patternfly6
-        url: https://github.com/RedHat-UX/demo-red-hat-theme-for-patternfly6
-        platform: GitHub
-        org: RedHat-UX
-        status: inactive
-        description: patternfly-6-hackday
-
-      - name: next-gen-ui-examples
-        url: https://github.com/RedHat-UX/next-gen-ui-examples
-        platform: GitHub
-        org: RedHat-UX
-        status: inactive
-        description: Repository contains example applications and extensions for Next Gen UI Agent
-        
-      - name: next-gen-ui-react
-        url: https://github.com/RedHat-UX/next-gen-ui-react
-        platform: GitHub
-        org: RedHat-UX
-        status: inactive
-        description: This npm package provides a collection of reusable Patternfly React components to support dynamic UI rendering for Next Gen UI Agent.
-
-      - name: next-gen-ui-agent
-        url: https://github.com/RedHat-UX/next-gen-ui-agent
-        platform: GitHub
-        org: RedHat-UX
-        status: inactive
-        description: The goal of this AI agent is to generate personalised and rich UI components based on the user prompt, chat history and backend data provided by other agent in your assistant.
-
-      - name: red-hat-design-site
-        url: https://github.com/RedHat-UX/red-hat-design-site
-        docs: https://design.redhat.com/
-        platform: GitHub
-        org: RedHat-UX
-        status: inactive
-        description: The old ux.redhat.com website - was likely built by Dan Caryll before RHDS was a thing.
-
   - id: pf-core
     name: PatternFly Core
     description: Core CSS, design tokens, and documentation framework
@@ -558,5 +425,138 @@ areas:
         org: patternfly
         status: active
         description: CI Dashboard for monitoring build status of PatternFly repos.
+
+  - id: experimental
+    name: Research & Experiments
+    description: Prototypes, research projects, and early-stage tools
+    items:
+      - name: lit-ssr-wasm
+        url: https://github.com/bennypowers/lit-ssr-wasm
+        docs: https://bennypowers.github.io/lit-ssr-wasm/
+        platform: GitHub
+        org: bennypowers
+        status: experimental
+        description: Server-side rendering of Lit components in WebAssembly
+        contacts: [Benny]
+        tags: [personal, prototype]
+        notes: Offered to Drupal team, got wishy-washy reception.
+
+      - name: golit
+        url: https://github.com/zeroedin/golit
+        platform: GitHub
+        org: zeroedin
+        status: experimental
+        description: Go-based SSR for Lit web components
+        contacts: [Steven]
+        tags: [personal, prototype]
+
+      - name: chickadee
+        url: https://github.com/bennypowers/chickadee
+        docs: https://bennypowers.github.io/chickadee/
+        platform: GitHub
+        org: bennypowers
+        status: experimental
+        description: Chickadee is a unified web component library built from first principles for product UIs and marketing sites.
+        contacts: [Benny]
+        tags: [personal, prototype]
+        notes: Rough draft at something like Felt.
+
+      - name: alloy
+        url: https://github.com/zeroedin/alloy
+        docs: https://alloyssg.dev/
+        platform: GitHub
+        org: zeroedin
+        status: experimental
+        description: Custom static site generator
+        contacts: [Steven]
+        tags: [personal, prototype]
+        notes: The original idea was to replace 11ty for ux.redhat.com.
+
+      - name: Editor plugins
+        platform: Various
+        org: bennypowers
+        status: active
+        description: Open-source editor plugins for various IDEs
+        contacts: [Benny]
+        tags: [personal]
+
+  - id: inactive
+    name: Inactive / Archived
+    description: Projects that are dead or no longer maintained
+    items:
+      - name: red-hat-extensions
+        url: https://github.com/RedHat-UX/red-hat-extensions
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: Planned platform for migrating custom elements
+        notes: >
+          Dead per Kyle. Idea that never took off —
+          was going to be where cp-elements migrated to.
+
+      - name: cp-elements
+        platform: Unknown
+        org: Customer Portal
+        status: inactive
+        description: Custom element implementation by the Customer Portal team
+        notes: >
+          Various members over the years. Maintenance issues.
+          Was going to migrate to red-hat-extensions (also dead).
+
+      - name: rh-footer-demo
+        url: https://github.com/RedHat-UX/rh-footer-demo
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: This app is an example of how to import and use the <rh-footer> via npm.
+
+      - name: pfe-react-wrappers-demo
+        url: https://github.com/RedHat-UX/pfe-react-wrappers-demo
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+
+      - name: red-hat-theme-for-patternfly6
+        url: https://github.com/RedHat-UX/red-hat-theme-for-patternfly6
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: The Red Hat Brand Theme is an ongoing initiative to patch the CSS styles of components from PatternFly version 6 and PatternFly Elements to more closely align with the Red Hat Design System. This initiative ensures design and user experience consistency across Red Hat’s digital experiences, in full alignment with the standards and guidelines established in the Red Hat Design System.
+
+      - name: demo-red-hat-theme-for-patternfly6
+        url: https://github.com/RedHat-UX/demo-red-hat-theme-for-patternfly6
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: patternfly-6-hackday
+
+      - name: next-gen-ui-examples
+        url: https://github.com/RedHat-UX/next-gen-ui-examples
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: Repository contains example applications and extensions for Next Gen UI Agent
+        
+      - name: next-gen-ui-react
+        url: https://github.com/RedHat-UX/next-gen-ui-react
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: This npm package provides a collection of reusable Patternfly React components to support dynamic UI rendering for Next Gen UI Agent.
+
+      - name: next-gen-ui-agent
+        url: https://github.com/RedHat-UX/next-gen-ui-agent
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: The goal of this AI agent is to generate personalised and rich UI components based on the user prompt, chat history and backend data provided by other agent in your assistant.
+
+      - name: red-hat-design-site
+        url: https://github.com/RedHat-UX/red-hat-design-site
+        docs: https://design.redhat.com/
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: The old ux.redhat.com website - was likely built by Dan Caryll before RHDS was a thing.
 
      
