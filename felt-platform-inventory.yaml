@@ -29,6 +29,9 @@ openQuestions:
   - question: What do we want to with inactive/archived projects?
     context: Some are not archived in GitHub yet - do we want to keep in org for historical purposes?
 
+  - question: Workflow for regenerating schemas?
+    context: patternfly-component-schemas hasn't been updated for 3 months.
+
 areas:
   - id: rhds-core
     name: RHDS Core
@@ -44,7 +47,7 @@ areas:
         status: active
         description: Web component implementation of the Red Hat Design System
         contacts: [RHDS team]
-        dependsOn: ["@patternfly/pfe-core", red-hat-icons, red-hat-design-tokens, "@patternfly/create-element", patternfly-elements, "@patternfly/eslint-config-elements", "@patternfly/eslint-plugin-elements", "@patternfly/icons", "@patternfly/pfe-tools", cem]
+        dependsOn: [red-hat-icons, red-hat-design-tokens, patternfly-elements, icons, cem]
 
       - name: red-hat-design-tokens
         npm-name: "@rhds/tokens"
@@ -56,7 +59,7 @@ areas:
         status: active
         description: Design tokens for Red Hat digital properties
         contacts: [RHDS team]
-        dependsOn: ["@patternfly/eslint-config-elements", rhds-core, red-hat-icons]
+        dependsOn: [rhds-core, red-hat-icons, patternfly-elements]
         consumers: [red-hat-design-system]
 
       - name: red-hat-icons
@@ -117,7 +120,7 @@ areas:
         org: RedHat-UX
         status: active
         description: Experimental extension elements based off of Red Hat Design System principles and tooling.
-        dependsOn: ["@patternfly/pfe-core", red-hat-design-system, red-hat-design-tokens, red-hat-icons, "@patternfly/create-element", patternfly-elements, "@patternfly/eslint-config-elements", "@patternfly/eslint-plugin-elements", "@patternfly/icons", "@patternfly/pfe-tools"]
+        dependsOn: [red-hat-design-system, red-hat-design-tokens, red-hat-icons, "@patternfly/create-element", patternfly-elements, icons]
 
       - name: red-hat-brand
         url: https://github.com/RedHat-UX/red-hat-brand
@@ -253,6 +256,24 @@ areas:
         dependsOn: [patternfly, patternfly-react, patternfly-a11y]
         notes: Site imports patternfly-design-tokens and all extensions so we can serve website.
 
+      - name: patternfly-doc-core
+        url: https://github.com/patternfly/patternfly-doc-core
+        npm-url:
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Deliver the docs API to patternfly-org and patternfly-mcp
+        consumers: [patternfly-org, patternfly-mcp]
+        
+      - name: patternfly-component-schemas
+        npm-name: "@patternfly/patternfly-component-schemas"
+        url: https://github.com/patternfly/patternfly-component-schemas
+        npm-url: https://www.npmjs.com/package/@patternfly/patternfly-component-schemas
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: JSON Schema metadata for PatternFly React components, providing structured validation and documentation for component props.
+
       - name: patternfly-mcp
         url: https://github.com/patternfly/patternfly-mcp
         platform: GitHub
@@ -359,7 +380,7 @@ areas:
         org: patternfly
         status: active
         description: User feedback components
-        dependsOn: [patternfly-react]
+        dependsOn: [patternfly-react, patternfly-a11y, patternfly-org]
 
       - name: patternfly-quickstarts
         npm-name: "@patternfly/quickstarts"
@@ -379,7 +400,7 @@ areas:
         org: patternfly
         status: active
         description: Virtualized table/list extension
-        dependsOn: [patternfly-react]
+        dependsOn: [patternfly-react, patternfly-org]
 
   - id: pf-tooling
     name: PatternFly Tooling
@@ -402,6 +423,7 @@ areas:
         org: patternfly
         status: active
         description: Accessibility testing utilities
+        dependsOn: [patternfly-react]
 
       - name: patternfly-react-seed
         url: https://github.com/patternfly/patternfly-react-seed
@@ -409,6 +431,7 @@ areas:
         org: patternfly
         status: active
         description: Starter template for PatternFly React apps
+        dependsOn: [patternfly-react]
 
       - name: patternfly-extension-seed
         url: https://github.com/patternfly/patternfly-extension-seed
@@ -417,6 +440,14 @@ areas:
         status: active
         description: Starter template for PatternFly extension repos
         dependsOn: [patternfly-react]
+
+      - name: patternfly-nextjs-seed
+        url: https://github.com/patternfly/patternfly-nextjs-seed
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: A modern Next.js application with PatternFly components. Generate production-ready dashboards in seconds.
+        dependsOn: [patternfly, patternfly-react]
 
       - name: patternfly-labs
         url: https://github.com/patternfly/patternfly-labs
@@ -434,13 +465,87 @@ areas:
         status: active
         description: CI Dashboard for monitoring build status of PatternFly repos.
 
+      - name: context-for-ai
+        url: https://github.com/patternfly/context-for-ai
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: A codemod tool that automatically adds standardized semantic data-* attributes to all PatternFly components in your codebase, making them AI-friendly and easier for AI tools to understand.
+
       - name: patternfly-cli
         url: https://github.com/patternfly/patternfly-cli
         platform: GitHub
         org: patternfly
         status: active
         description: CLI tool for scaffolding projects, performing code modifications, and running project-related tasks
-        dependsOn: ["@patternfly/context-for-ai"]
+        dependsOn: [context-for-ai]
+
+      - name: design-comments
+        url: https://github.com/patternfly/design-comments
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: A floating comment overlay for React apps — pin feedback to any UI element, sync with GitHub Issues and Jira.
+        dependsOn: [patternfly-react]
+
+      - name: react-component-groups-agent-dev
+        url: https://github.com/patternfly/react-component-groups-agent-dev
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Rehor bot instance for Patternfly.
+
+      - name: icons
+        npm-name: "@patternfly/icons"
+        url: https://github.com/patternfly/icons
+        npm-url: https://www.npmjs.com/package/@patternfly/icons
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: PatternFly icons used by RHDS.
+     
+      - name: pfe-tools
+        url: https://github.com/patternfly/pfe-tools
+        platform: GitHub
+        org: patternfly
+        status: inactive
+        description: This is a WIP repository for extracting the dev tools out of the PatternFly Elements project.
+
+      - name: module-federation-tree-shaking-plugin
+        url: https://github.com/patternfly/module-federation-tree-shaking-plugin
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Tree shaking webpack plugin that can be used for module federation
+
+      - name: widgetized-dashboard
+        npm-name: "@patternfly/widgetized-dashboard"
+        url: https://github.com/patternfly/widgetized-dashboard
+        npm-url: 
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: A generic, reusable PatternFly component library providing a customizable widget-based dashboard with drag-and-drop functionality.
+        dependsOn: [patternfly-react, patternfly-org, patternfly-a11y]
+        
+  - id: alternative-implementations
+    name: Alternative implementations
+    description: PatternFly written in other languages.
+    items:
+      - name: angular-patternfly
+        url: https://github.com/patternfly/angular-patternfly
+        platform: GitHub
+        org: patternfly
+        status: unknown
+        description: This repo contains instructions and the code for a set of Angular 1 components for the PatternFly project.
+     
+      - name: patternfly-webcomponents
+        url: https://github.com/patternfly/patternfly-webcomponents
+        platform: GitHub
+        org: patternfly
+        status: unknown
+        description: Proof of concept PatternFly design Web Components
+        dependsOn: [patternfly]
 
   - id: experimental
     name: Research & Experiments
