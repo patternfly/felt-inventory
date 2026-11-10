@@ -551,7 +551,7 @@ areas:
         description: Used for tracking Figma work like bugs or adding new stuff to the library. Syncs to Jira.
 
   - id: alternative-implementations
-    name: Alternative implementations
+    name: Alternative Implementations
     description: PatternFly written in other languages.
     items:
       - name: angular-patternfly
