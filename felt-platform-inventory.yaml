@@ -26,11 +26,14 @@ openQuestions:
     context: Benny offered it to Drupal team, got wishy-washy reception. Path forward?
     mentioned: [Benny]
 
-  - question: What do we want to with inactive/archived projects?
+  - question: What do we want to with inactive/archived projects in the RHDS space?
     context: Some are not archived in GitHub yet - do we want to keep in org for historical purposes?
 
   - question: Workflow for regenerating schemas?
     context: patternfly-component-schemas hasn't been updated for 3 months.
+
+  - question: We have several less-active repos in the PatternFly space; can we archive them?
+    context: .github, slack-invite-automation, AI-infra-ui-components, patternfly-infra-issues, pf-roadmap, patternfly-css, and patternfly.github.io are still active
 
 areas:
   - id: rhds-core
@@ -220,6 +223,7 @@ areas:
         description: CSS handling utilities for Lit web components
         contacts: [Benny]
         tags: [dependency, personal]
+        consumers: [red-hat-design-system]
         notes: Build plugins to import css files as JavaScript tagged-template literal objects.
 
   - id: pf-core
@@ -521,13 +525,31 @@ areas:
       - name: widgetized-dashboard
         npm-name: "@patternfly/widgetized-dashboard"
         url: https://github.com/patternfly/widgetized-dashboard
-        npm-url: 
+        npm-url: https://www.npmjs.com/package/@patternfly/widgetized-dashboard
         platform: GitHub
         org: patternfly
         status: active
         description: A generic, reusable PatternFly component library providing a customizable widget-based dashboard with drag-and-drop functionality.
         dependsOn: [patternfly-react, patternfly-org, patternfly-a11y]
         
+  - id: tracking
+    name: Tracking
+    description: Older repos used for communication with open-source contributors and syncing to Jira
+    items:
+      - name: pf-design
+        url: https://github.com/patternfly/patternfly-design
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Public intake for design features.
+
+      - name: pf-design-kit
+        url: https://github.com/patternfly/patternfly-design-kit
+        platform: GitHub
+        org: patternfly
+        status: active
+        description: Used for tracking Figma work like bugs or adding new stuff to the library. Syncs to Jira.
+
   - id: alternative-implementations
     name: Alternative implementations
     description: PatternFly written in other languages.
