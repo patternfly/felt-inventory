@@ -33,7 +33,7 @@ openQuestions:
     context: patternfly-component-schemas hasn't been updated for 3 months.
 
   - question: We have several less-active repos in the PatternFly space; can we archive them?
-    context: .github, slack-invite-automation, AI-infra-ui-components, patternfly-infra-issues, pf-roadmap, patternfly-css, and patternfly.github.io are still active
+    context: slack-invite-automation, AI-infra-ui-components, patternfly-infra-issues, pf-roadmap, patternfly-css, and patternfly.github.io are still active
 
 areas:
   - id: rhds-core
@@ -124,15 +124,6 @@ areas:
         status: active
         description: Experimental extension elements based off of Red Hat Design System principles and tooling.
         dependsOn: [red-hat-design-system, red-hat-design-tokens, red-hat-icons, "@patternfly/create-element", patternfly-elements, icons]
-
-      - name: red-hat-brand
-        url: https://github.com/RedHat-UX/red-hat-brand
-        docs: https://prismatic-souffle-43beb6.netlify.app/
-        platform: GitHub
-        org: RedHat-UX
-        status: active
-        description: Red Hat's Brand site, brand.redhat.com.
-        dependsOn: [patternfly-elements, red-hat-design-system]
 
   - id: rhds-infra
     name: Infrastructure
@@ -702,4 +693,12 @@ areas:
         status: inactive
         description: The old ux.redhat.com website - was likely built by Dan Caryll before RHDS was a thing.
 
+      - name: red-hat-brand
+        url: https://github.com/RedHat-UX/red-hat-brand
+        docs: https://prismatic-souffle-43beb6.netlify.app/
+        platform: GitHub
+        org: RedHat-UX
+        status: inactive
+        description: Red Hat's Brand site, brand.redhat.com.
+        dependsOn: [patternfly-elements, red-hat-design-system]
      
